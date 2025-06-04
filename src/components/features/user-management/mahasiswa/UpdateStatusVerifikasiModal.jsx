@@ -44,8 +44,8 @@ export default function UpdateStatusModal({
         closeModal();
     };
 
-    const filteredStatusOptions = statusOptions.filter(
-        (s) => s.label.toLowerCase() !== "menunggu verifikasi"
+    const filteredStatusOptions = statusOptions.filter((s) => 
+        s.label.toLowerCase() !== "menunggu verifikasi" && s.label.toLowerCase() !== "menunggu peninjauan"
     );
 
     const options = filteredStatusOptions.map((s) => ({
