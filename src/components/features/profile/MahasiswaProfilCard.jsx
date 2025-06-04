@@ -72,7 +72,7 @@ export default function MahasiswaProfilCard() {
                         </h2>
                     </div>
 
-                    <div className="hidden xl:flex gap-2 mb-2">
+                    <div className="flex gap-2 space-y-4 mb-2">
                         {isTinjau && (
                             <button
                                 onClick={handleMintaTinjau}
