@@ -1,0 +1,15 @@
+<svg
+  class="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M14 3H5C4.44772 3 4 3.44772 4 4V20C4 20.5523 4.44772 21 5 21H14C14.5523 21 15 20.5523 15 20V17H13.5V19.5H5.5V4.5H13.5V7H15V4C15 3.44772 14.5523 3 14 3ZM18.7929 12L15.1464 15.6464L16.2071 16.7071L21.2071 11.7071C21.5976 11.3166 21.5976 10.6834 21.2071 10.2929L16.2071 5.29289L15.1464 6.35355L18.7929 10H9V12H18.7929Z"
+    fill="currentColor"
+  />
+</svg>
