@@ -9,7 +9,7 @@ import PageMeta from "@/components/common/PageMeta";
 import EditCatatanKonselingForm from "@/features/catatan-konseling/components/forms/EditCatatanKonselingForm";
 
 export default function KonselorEditCatatanKonseling() {
-    const { catatanKonselingId } = useParams();
+    const { id: catatanKonselingId } = useParams();
     const navigate = useNavigate();
 
     const [konselingDetails, setKonselingDetails] = useState(null);
@@ -56,7 +56,7 @@ export default function KonselorEditCatatanKonseling() {
         };
 
         fetchKonselingDetails();
-    }, [catatanKonselingDetails?.konseling_id, navigate]);
+    }, [catatanKonselingDetails, catatanKonselingDetails?.konseling_id, navigate]);
 
     const handleFormSubmit = async (formData) => {
         setLoading(true);
