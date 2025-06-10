@@ -3,7 +3,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css";
 import { Indonesian } from "flatpickr/dist/l10n/id"; // Optional: for localization
 import Label from "./Label";
-import { CalenderIcon } from "../../icons";
+import { CalenderIcon } from "@/icons";
 
 export default function DatePicker({
   id,
@@ -35,9 +35,9 @@ export default function DatePicker({
       maxDate,
       disableMobile: true,
       locale: Indonesian,
-      onChange: (selectedDates, dateStr, instance) => {
+      onChange: (selectedDates, dateStr) => {
         if (onChange) {
-          // Kirim string tanggal format YYYY-MM-DD saja
+          // Kirim string tanggal format YYYY-MM-DD
           onChange(dateStr);
         }
       },

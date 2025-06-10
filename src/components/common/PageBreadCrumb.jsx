@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"; // Updated the import from react-router to react-router-dom
+import { Link } from "react-router-dom";
 
 const PageBreadcrumb = ({ pageTitle }) => {
   return (

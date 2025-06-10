@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../ui/table";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import SearchInput from "./SearchInput";
 import LimitSelector from "./LimitSelector";
 import Pagination from "./Pagination";
@@ -8,7 +8,7 @@ import { filterData, sortData, paginateData, getNestedValue } from "./helpers";
 const DataTable = ({
   data = [],
   columns = [],
-  defaultSort = { key: "", direction: "asc" },
+  defaultSort = { key: "", direction: "asc" }, 
   searchable = true,
   pagination = true,
   itemsPerPageOptions = [5, 10, 20, 50],

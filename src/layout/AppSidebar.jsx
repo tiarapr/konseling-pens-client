@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Perhatikan perubahan di sini (react-router -> react-router-dom)
+import { Link, useLocation } from "react-router-dom"; 
 import {
     CalenderIcon,
     ChevronDownIcon,
@@ -12,9 +12,9 @@ import {
     UserIcon,
     SignOutIcon,
     TableIcon,
-} from "../icons";
-import { useSidebar } from "../context/SidebarContext";
-import { useAuth } from "../context/AuthContext";
+} from "@/icons";
+import { useSidebar } from "@/context/SidebarContext";
+import { useAuth } from "@/context/AuthContext";
 
 const menuItemsByRole = {
     master: [
