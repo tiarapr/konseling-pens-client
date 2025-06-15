@@ -40,11 +40,11 @@ export default function OtpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const otpCode = otp.join("");
 
     if (otpCode.length !== 6) {
-      setError("Please enter a complete 6-digit OTP.");
+      setError("Harap masukkan 6 digit OTP lengkap");
       return;
     }
 
@@ -53,52 +53,43 @@ export default function OtpForm() {
     setMessage("");
 
     try {
-      // Verifikasi OTP
-      await api.post("/authentication/verify-otp", {
+      // 1. Verify OTP
+      const verifyResponse = await api.post('/authentication/verify-otp', {
         email,
-        otp: otpCode,
+        otp: otpCode
       });
 
-      setMessage("OTP verified successfully!");
+      // Check if verification was successful
+      if (verifyResponse.data.success) {
+        // 2. Get user info
+        const userResponse = await api.get('/user/me');
+        const user = userResponse.data.data.user;
 
-      // Fetch user information
-      const response = await api.get("/user/me");
-      const user = response.data.data.user;
-      const userRole = user?.role_name;
+        // 3. Save to local storage - wait for this to complete
+        await new Promise((resolve) => {
+          localStorage.setItem('user', JSON.stringify(user));
+          // Add a small delay to ensure localStorage is written
+          setTimeout(resolve, 100);
+        });
 
-      // Simpan user ke localStorage dan state
-      await new Promise((resolve) => {
-        localStorage.setItem('user', JSON.stringify(user));
+        // 4. Update context
         setUser(user);
-        resolve();
-      });
 
-      if (!userRole) {
-        throw new Error("User role not found in the response.");
-      }
+        // 5. Only then redirect based on role
+        const redirectPath = {
+          'master': '/master-dashboard',
+          'admin': '/admin-dashboard',
+          'konselor': '/konselor-dashboard',
+          'kemahasiswaan': '/kemahasiswaan-dashboard',
+          'mahasiswa': '/dashboard'
+        }[user.role_name] || '/not-found';
 
-      // Redirect based on role
-      switch (userRole) {
-        case "master":
-          navigate("/master-dashboard");
-          break;
-        case "admin":
-          navigate("/admin-dashboard");
-          break;
-        case "konselor":
-          navigate("/konselor-dashboard");
-          break;
-        case "kemahasiswaan":
-          navigate("/kemahasiswaan-dashboard");
-          break;
-        case "mahasiswa":
-          navigate("/dashboard");
-          break;
-        default:
-          navigate("/not-found");
+        navigate(redirectPath);
+      } else {
+        throw new Error("OTP verification failed");
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "Failed to verify OTP.");
+      setError(err.response?.data?.message || "Verifikasi OTP gagal");
     } finally {
       setLoading(false);
     }
