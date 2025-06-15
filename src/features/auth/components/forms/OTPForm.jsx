@@ -60,7 +60,7 @@ export default function OtpForm() {
       });
 
       // Check if verification was successful
-      if (verifyResponse.data.status === "success") {
+      if (verifyResponse) {
         // 2. Get user info
         const userResponse = await api.get('/user/me');
         const user = userResponse.data.data.user;
@@ -86,7 +86,7 @@ export default function OtpForm() {
 
         navigate(redirectPath);
       } else {
-        throw new Error(verifyResponse.data.message || "OTP verification failed");
+        throw new Error("OTP verification failed");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Verifikasi OTP gagal");
