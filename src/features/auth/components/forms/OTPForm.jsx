@@ -57,25 +57,24 @@ export default function OtpForm() {
       const verifyResponse = await api.post('/authentication/verify-otp', {
         email,
         otp: otpCode
+      }, {
+        withCredentials: true
       });
 
-      // Check if verification was successful
-      if (verifyResponse) {
-        // 2. Get user info
-        const userResponse = await api.get('/user/me');
+      if (verifyResponse.data.status === "success") {
+        const userResponse = await api.get('/user/me', {
+          withCredentials: true
+        });
+
         const user = userResponse.data.data.user;
 
-        // 3. Save to local storage - wait for this to complete
-        await new Promise((resolve) => {
-          localStorage.setItem('user', JSON.stringify(user));
-          // Add a small delay to ensure localStorage is written
-          setTimeout(resolve, 100);
-        });
+        // 3. Save user data to local storage
+        localStorage.setItem('user', JSON.stringify(user));
 
         // 4. Update context
         setUser(user);
 
-        // 5. Only then redirect based on role
+        // 5. Redirect based on role
         const redirectPath = {
           'master': '/master-dashboard',
           'admin': '/admin-dashboard',
@@ -86,10 +85,11 @@ export default function OtpForm() {
 
         navigate(redirectPath);
       } else {
-        throw new Error("OTP verification failed");
+        throw new Error(verifyResponse.data.message || "OTP verification failed");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Verifikasi OTP gagal");
+      console.error('Error during OTP verification:', err);
+      setError(err.response?.data?.message || err.message || "Verifikasi OTP gagal");
     } finally {
       setLoading(false);
     }
