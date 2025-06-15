@@ -15,7 +15,7 @@ export default function KonselorRiwayatKonseling() {
     // Fetch konseling data
     const fetchKonseling = async () => {
         try {
-            const response = await api.get("/konseling/my");
+            const response = await api.get("/konseling/konselor");
             const konseling = response.data.data.konseling;
 
             // Filter untuk hanya menampilkan status dijadwalkan, dijadwalkan ulang, atau berlangsung
@@ -132,7 +132,7 @@ export default function KonselorRiwayatKonseling() {
             key: "catatan_konseling",
             title: "Catatan Konseling",
             render: (item) => {
-                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id); // Dapatkan catatan konseling yang cocok
+                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id); 
                 return catatan ? (
                     <Link to={`/konselor-dashboard/catatan-konseling/${catatan.id}`}>
                         <span className="text-brand-500 underline">Detail</span>

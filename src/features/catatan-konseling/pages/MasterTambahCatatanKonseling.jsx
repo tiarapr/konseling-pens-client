@@ -7,6 +7,7 @@ import api from "@/api/api";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import TambahCatatanKonselingForm from "../components/forms/TambahCatatanKonselingForm";
+import BackButton from "@/components/ui/button/BackButton";
 
 export default function MasterTambahCatatanKonseling() {
     const { konselingId } = useParams();
@@ -76,6 +77,7 @@ export default function MasterTambahCatatanKonseling() {
                 description="Halaman untuk menambahkan catatan konseling"
             />
             <PageBreadcrumb pageTitle="Form Catatan Konseling" />
+            <BackButton />
             <ComponentCard title="Form Catatan Konseling">
                 <div className="space-y-6">
                     {konselingDetails ? (

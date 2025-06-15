@@ -58,6 +58,7 @@ import MahasiswaRiwayatKonseling from '@/features/riwayat-konseling/pages/Mahasi
 import MahasiswaDetailCatatanKonseling from '@/features/catatan-konseling/pages/MahasiswaDetailCatatanKonseling';
 import MahasiswaAkun from '@/features/profil-akun/pages/MahasiswaAkun';
 import MahasiswaProfil from '@/features/profil-akun/pages/MahasiswaProfil';
+import AdminRiwayatKonseling from '@/features/riwayat-konseling/pages/AdminRiwayatKonseling';
 
 const router = createBrowserRouter([
     { path: '/', element: <HomePage /> },
@@ -109,6 +110,7 @@ const router = createBrowserRouter([
             { path: 'janji-temu', element: <AdminManajemenJanjiTemu /> },
             { path: 'konseling', element: <AdminManajemenKonseling /> },
             { path: 'jadwal-konseling', element: <AdminKalenderKonseling /> },
+            { path: 'riwayat-konseling', element: <AdminRiwayatKonseling /> },
             { path: 'mahasiswa', element: <AdminListMahasiswaPengajuJanjiTemu /> },
             { path: 'konselor', element: <Konselor /> },
             { path: 'profile', element: <AdminProfil /> }
@@ -128,7 +130,7 @@ const router = createBrowserRouter([
             { path: 'konseling/:konselingId/catatan', element: <KonselorTambahCatatanKonseling /> },
             { path: 'riwayat-konseling', element: <KonselorRiwayatKonseling /> },
             { path: 'catatan-konseling/:id', element: <KonselorDetailCatatanKonseling /> },
-            { path: 'catatan/:catatanKonselingId/edit', element: <KonselorEditCatatanKonseling /> },
+            { path: 'catatan-konseling/:id/edit', element: <KonselorEditCatatanKonseling /> },
             { path: 'mahasiswa', element: <KonselorListMahasiswaKonseling /> },
             { path: 'mahasiswa/:nrp/rekam-medis', element: <RekamMedisDetail /> },
             { path: 'profile', element: <KonselorProfil /> }

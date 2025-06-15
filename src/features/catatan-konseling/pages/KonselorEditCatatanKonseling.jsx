@@ -7,6 +7,7 @@ import ComponentCard from "@/components/common/ComponentCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";
 import EditCatatanKonselingForm from "@/features/catatan-konseling/components/forms/EditCatatanKonselingForm";
+import BackButton from "@/components/ui/button/BackButton";
 
 export default function KonselorEditCatatanKonseling() {
     const { id: catatanKonselingId } = useParams();
@@ -79,6 +80,7 @@ export default function KonselorEditCatatanKonseling() {
                 description="Halaman untuk edit catatan konseling"
             />
             <PageBreadcrumb pageTitle="Form Catatan Konseling" />
+            <BackButton />
             <ComponentCard title="Form Catatan Konseling">
                 <div className="space-y-6">
                     <EditCatatanKonselingForm

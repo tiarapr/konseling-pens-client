@@ -4,6 +4,8 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Select from "@/components/form/Select";
 import api from "@/api/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export default function PengajuanJanjiTemuMahasiswaForm() {
     const [nrp, setNrp] = useState("");
@@ -25,6 +27,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -159,7 +162,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
         setSuccessMsg(null);
 
         if (!nrp) {
-            setError("NRP mahasiswa belum tersedia.");
+            toast.error("NRP mahasiswa belum tersedia.");
             return;
         }
 
@@ -174,7 +177,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
             );
 
             if (mainError) {
-                setError(`Jadwal Utama: ${mainError}`);
+                toast.error(`Jadwal Utama: ${mainError}`);
                 return;
             }
         }
@@ -191,7 +194,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
             );
 
             if (altError) {
-                setError(`Jadwal Alternatif: ${altError}`);
+                toast.error(`Jadwal Alternatif: ${altError}`);
                 return;
             }
         }
@@ -201,19 +204,8 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
             const payload = { nrp, ...formData };
             await api.post("/janji-temu", payload);
 
-            setSuccessMsg("Janji temu berhasil diajukan!");
-            setFormData({
-                tipe_konsultasi: "",
-                preferensi_konselor_id: "",
-                jadwal_utama_tanggal: "",
-                jadwal_utama_jam_mulai: "",
-                jadwal_utama_jam_selesai: "",
-                jadwal_alternatif_tanggal: "",
-                jadwal_alternatif_jam_mulai: "",
-                jadwal_alternatif_jam_selesai: "",
-            });
-            setSelectedDay("");
-            setAltSelectedDay("");
+            toast.success("Janji temu berhasil diajukan!");
+            navigate("/dashboard/janji-temu");
         } catch (err) {
             setError(err.response?.data?.message || "Gagal mengajukan janji temu");
             console.error(err);

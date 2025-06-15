@@ -8,13 +8,26 @@ import { useModal } from "@/hooks/useModal";
 import api from "@/api/api";
 import { toast } from "react-toastify";
 import SetJadwalModal from "@/features/konseling/components/modals/SetJadwalModal";
+import AlasanPenolakanModal from "../components/modals/AlasanPenolakanModal";
+import { Link } from "react-router";
+import Tabs from "@/components/common/Tabs";
 
 export default function MasterJanjiTemu() {
     const [janjiTemuList, setJanjiTemuList] = useState([]);
     const [konselorList, setKonselorList] = useState([]);
     const [konselingList, setKonselingList] = useState([]);
     const { isOpen, openModal, closeModal } = useModal();
+    const { isOpen: isRejectModalOpen, openModal: openRejectModal, closeModal: closeRejectModal } = useModal();
     const [selectedJanjiTemu, setSelectedJanjiTemu] = useState(null);
+    const [janjiTemuToReject, setJanjiTemuToReject] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Menunggu", value: "menunggu_konfirmasi" },
+        { label: "Dikonfirmasi", value: "dikonfirmasi" },
+        { label: "Ditolak", value: "ditolak" },
+    ];
 
     const fetchJanjiTemu = async () => {
         try {
@@ -23,13 +36,22 @@ export default function MasterJanjiTemu() {
             setJanjiTemuList(janjiTemu);
         } catch (error) {
             console.error("Error fetching janji temu data:", error);
+            toast.error("Gagal mengambil data janji temu");
         }
     };
 
+    const filteredData = selectedStatus === "all"
+        ? janjiTemuList
+        : janjiTemuList.filter(j => j.status === selectedStatus);
+
     const fetchKonselors = async () => {
-        const res = await api.get("/konselor");
-        setKonselorList(res.data.data.konselors);
-        console.log("Konselor List:", res.data.data.konselors);
+        try {
+            const res = await api.get("/konselor");
+            setKonselorList(res.data.data.konselors);
+        } catch (error) {
+            console.error("Error fetching konselor data:", error);
+            toast.error("Gagal mengambil data konselor");
+        }
     };
 
     const fetchKonseling = async () => {
@@ -38,6 +60,7 @@ export default function MasterJanjiTemu() {
             setKonselingList(response.data.data.konseling);
         } catch (error) {
             console.error("Error fetching konseling data:", error);
+            toast.error("Gagal mengambil data konseling");
         }
     };
 
@@ -47,13 +70,24 @@ export default function MasterJanjiTemu() {
         fetchKonseling();
     }, []);
 
-    const updateStatus = async (id, status) => {
+    const updateStatus = async (id, status, alasan_penolakan = null) => {
         try {
-            await api.put(`/janji-temu/${id}/status`, { status });
-            // Refresh list after status update
+            const payload = { status };
+
+            // Jika status ditolak, tambahkan alasan penolakan
+            if (status === "ditolak") {
+                if (!alasan_penolakan) {
+                    throw new Error("Alasan penolakan wajib diisi");
+                }
+                payload.alasan_penolakan = alasan_penolakan;
+            }
+
+            await api.put(`/janji-temu/${id}/status`, payload);
             fetchJanjiTemu();
+            toast.success(`Status berhasil diubah menjadi ${status}`);
         } catch (error) {
             console.error(`Gagal mengupdate status ke ${status}:`, error);
+            toast.error(error.response?.data?.message || error.message || "Gagal mengupdate status");
         }
     };
 
@@ -62,7 +96,16 @@ export default function MasterJanjiTemu() {
     };
 
     const handleTolak = (id) => {
-        updateStatus(id, "ditolak");
+        const janjiTemu = janjiTemuList.find((j) => j.id === id);
+        setJanjiTemuToReject(janjiTemu);
+        openRejectModal();
+    };
+
+    const handleConfirmReject = (alasan_penolakan) => {
+        if (janjiTemuToReject) {
+            updateStatus(janjiTemuToReject.id, "ditolak", alasan_penolakan);
+            closeRejectModal();
+        }
     };
 
     const handleSetJadwal = (id) => {
@@ -80,7 +123,7 @@ export default function MasterJanjiTemu() {
             toast.success("Konseling berhasil dijadwalkan");
         } catch (error) {
             console.error("Gagal menyimpan jadwal konseling:", error);
-            toast.error("Gagal menyimpan jadwal.");
+            toast.error(error.response?.data?.message || "Gagal menyimpan jadwal");
         }
     };
 
@@ -95,7 +138,7 @@ export default function MasterJanjiTemu() {
             title: "Nama Mahasiswa",
             sortable: true,
             render: (item) => (
-                <Link to='/admin-dashboard/mahasiswa'>
+                <Link to='/master-dashboard/user/mahasiswa'>
                     <a className="underline hover:text-brand-500">{item.nama_mahasiswa}</a>
                 </Link>
             ),
@@ -195,11 +238,20 @@ export default function MasterJanjiTemu() {
 
                     return (
                         <button
-                            className="px-4 py-1 text-theme-xs text-blue-600 border border-blue-500 rounded hover:bg-blue-500 hover:text-white"
+                            className="px-4 py-1 text-blue-600 border border-blue-500 rounded hover:bg-blue-500 hover:text-white"
                             onClick={() => handleSetJadwal(item.id)}
                         >
                             Set Jadwal Konseling
                         </button>
+                    );
+                } else if (item.status === "ditolak") {
+                    return (
+                        <span className="text-red-500 italic">
+                            Ditolak dengan alasan:{" "}
+                            {item.alasan_penolakan || (
+                                <span className="text-gray-400">Tidak ada alasan penolakan</span>
+                            )}
+                        </span>
                     );
                 } else {
                     return <span className="text-gray-400">Tidak ada aksi</span>;
@@ -211,14 +263,15 @@ export default function MasterJanjiTemu() {
     return (
         <>
             <PageMeta
-                title="Konseling PENS Dashboard | Manajemen Janji Temu"
-                description="Kelola data janji temu mahasiswa"
+                title="Konseling PENS Dashboard | Janji Temu Mahasiswa"
+                description="Halaman Kelola data janji temu mahasiswa"
             />
             <PageBreadcrumb pageTitle="Manajemen Janji Temu" />
             <div className="space-y-6">
                 <ComponentCard title="Data Janji Temu Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={janjiTemuList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_pengajuan", direction: "desc" }}
                         searchable={true}
@@ -234,6 +287,12 @@ export default function MasterJanjiTemu() {
                 janjiTemu={selectedJanjiTemu}
                 onSubmit={submitJadwal}
                 konselorOptions={konselorList}
+            />
+            <AlasanPenolakanModal
+                isOpen={isRejectModalOpen}
+                closeModal={closeRejectModal}
+                onSubmit={handleConfirmReject}
+                janjiTemu={janjiTemuToReject}
             />
         </>
     );

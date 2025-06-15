@@ -5,9 +5,19 @@ import PageMeta from "@/components/common/PageMeta";
 import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
+import Tabs from "@/components/common/Tabs";
+import { Link } from "react-router";
 
 export default function KemahasiswaanJanjiTemuList() {
     const [janjiTemuList, setJanjiTemuList] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Menunggu", value: "menunggu_konfirmasi" },
+        { label: "Dikonfirmasi", value: "dikonfirmasi" },
+        { label: "Ditolak", value: "ditolak" },
+    ];
 
     const fetchJanjiTemu = async () => {
         try {
@@ -22,6 +32,10 @@ export default function KemahasiswaanJanjiTemuList() {
     useEffect(() => {
         fetchJanjiTemu();
     }, []);
+
+    const filteredData = selectedStatus === "all"
+        ? janjiTemuList
+        : janjiTemuList.filter(j => j.status === selectedStatus);
 
     const columns = [
         {
@@ -43,6 +57,21 @@ export default function KemahasiswaanJanjiTemuList() {
             key: "nrp",
             title: "NRP",
             sortable: true,
+        },
+        {
+            key: "phone_number",
+            title: "No. Telp",
+            sortable: true,
+            render: (item) => {
+                return (
+                    <a
+                        href={`https://wa.me/${item.phone_number}`}
+                        className="underline text-green-500"
+                    >
+                        WhatsApp
+                    </a>
+                )
+            }
         },
         {
             key: "tipe_konsultasi",
@@ -129,8 +158,9 @@ export default function KemahasiswaanJanjiTemuList() {
             <PageBreadcrumb pageTitle="Manajemen Janji Temu" />
             <div className="space-y-6">
                 <ComponentCard title="Data Janji Temu Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={janjiTemuList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_pengajuan", direction: "desc" }}
                         searchable={true}

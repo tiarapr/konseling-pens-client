@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import api from "@/api/api";
 import Detail from "../components/detail";
 import { useAuth } from "@/context/AuthContext";
+import BackButton from "@/components/ui/button/BackButton";
 
 export default function KonselorDetailCatatanKonseling() {
     const { user } = useAuth();
@@ -49,6 +50,7 @@ export default function KonselorDetailCatatanKonseling() {
                 description="Halaman untuk detail catatan konseling"
             />
             <PageBreadcrumb pageTitle="Detail Catatan Konseling" />
+            <BackButton />
             <ComponentCard title="Detail Catatan Konseling">
                 <div className="space-y-6">
                     {catatanKonseling ? (

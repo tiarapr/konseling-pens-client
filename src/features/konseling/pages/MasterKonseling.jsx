@@ -8,8 +8,9 @@ import api from "@/api/api";
 import SetJadwalModal from "../components/modals/SetJadwalModal";
 import UpdateStatusModal from "../components/modals/UpdateStatusModal";
 import { Link } from "react-router";
+import Tabs from "@/components/common/Tabs";
 
-export default function MasterKonseling () {
+export default function MasterKonseling() {
     const [konselingList, setKonselingList] = useState([]);
     const [showRescheduleModal, setShowRescheduleModal] = useState(false);
     const [selectedJanjiTemu, setSelectedJanjiTemu] = useState(null);
@@ -17,6 +18,14 @@ export default function MasterKonseling () {
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedStatusData, setSelectedStatusData] = useState(null);
     const [statusOptions, setStatusOptions] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Dijadwalkan", value: "dijadwalkan" },
+        { label: "Dijadwalkan Ulang", value: "dijadwalkan_ulang" },
+        { label: "Berlangsung", value: "berlangsung" },
+    ];
 
     const fetchKonselors = async () => {
         const res = await api.get("/konselor");
@@ -46,6 +55,12 @@ export default function MasterKonseling () {
         fetchKonselors();
     }, []);
 
+    const normalizeStatus = (status) => status.toLowerCase().replace(/\s+/g, "_");
+
+    const filteredData = selectedStatus === "all"
+        ? konselingList
+        : konselingList.filter(k => normalizeStatus(k.status.name) === selectedStatus);
+
     const handleEdit = (item) => {
         setSelectedJanjiTemu(item);
         setShowRescheduleModal(true);
@@ -68,7 +83,7 @@ export default function MasterKonseling () {
             title: "Nama Mahasiswa",
             sortable: true,
             render: (item) => (
-                <Link to='/master-dashboard/mahasiswa'>
+                <Link to='/admin-dashboard/mahasiswa'>
                     <a className="underline hover:text-brand-500">{item.mahasiswa}</a>
                 </Link>
             ),
@@ -78,7 +93,7 @@ export default function MasterKonseling () {
             title: "Nama Konselor",
             sortable: true,
             render: (item) => (
-                <Link to='/master-dashboard/konselor'>
+                <Link to='/admin-dashboard/konselor'>
                     <a className="underline hover:text-brand-500">{item.konselor}</a>
                 </Link>
             ),
@@ -167,9 +182,18 @@ export default function MasterKonseling () {
                     </button>
                     <button
                         onClick={() => handleUpdateStatus(item)}
-                        className="px-2 py-1 text-green-700 border border-green-700 rounded hover:bg-green-700 hover:text-white"
+                        className="px-2 py-1 text-brand-500 border border-brand-500 rounded hover:bg-brand-600 hover:text-white"
                     >
                         Update Status
+                    </button>
+                    <button
+                        className="px-2 py-1 text-green-700 border border-green-700 rounded hover:bg-green-700 hover:text-white"
+                    >
+                        <a
+                            href={`https://wa.me/${item.no_telp}`}
+                        >
+                            WhatsApp
+                        </a>
                     </button>
                     {item.status.name.toLowerCase() === "berlangsung" && (
                         <a
@@ -187,14 +211,15 @@ export default function MasterKonseling () {
     return (
         <>
             <PageMeta
-                title="Konseling PENS Dashboard | Manajemen Konseling"
-                description="Kelola data konseling mahasiswa"
+                title="Konseling PENS Dashboard | Konseling"
+                description="Halaman kelola data konseling mahasiswa dengan konselor"
             />
             <PageBreadcrumb pageTitle="Manajemen Konseling" />
             <div className="space-y-6">
                 <ComponentCard title="Data Konseling Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={konselingList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_konseling", direction: "desc" }}
                         searchable={true}

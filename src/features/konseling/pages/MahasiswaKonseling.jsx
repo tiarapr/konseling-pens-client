@@ -5,9 +5,18 @@ import PageMeta from "@/components/common/PageMeta";
 import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
+import Tabs from "@/components/common/Tabs";
 
 export default function MahasiswaKonseling() {
     const [konselingList, setKonselingList] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Dijadwalkan", value: "dijadwalkan" },
+        { label: "Dijadwalkan Ulang", value: "dijadwalkan_ulang" },
+        { label: "Berlangsung", value: "berlangsung" },
+    ];
 
     const fetchKonseling = async () => {
         try {
@@ -29,6 +38,12 @@ export default function MahasiswaKonseling() {
     useEffect(() => {
         fetchKonseling();
     }, []);
+
+    const normalizeStatus = (status) => status.toLowerCase().replace(/\s+/g, "_");
+
+    const filteredData = selectedStatus === "all"
+        ? konselingList
+        : konselingList.filter(k => normalizeStatus(k.status.name) === selectedStatus);
 
     const handleKonfirmasi = async (id) => {
         try {
@@ -166,8 +181,9 @@ export default function MahasiswaKonseling() {
             <PageBreadcrumb pageTitle="Konseling" />
             <div className="space-y-6">
                 <ComponentCard title="Data Konseling Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={konselingList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_konseling", direction: "desc" }}
                         searchable={true}

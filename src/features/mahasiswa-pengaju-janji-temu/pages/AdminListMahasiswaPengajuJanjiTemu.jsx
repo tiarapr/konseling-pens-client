@@ -7,6 +7,7 @@ import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
 import DetailMahasiswaModal from "@/features/user-management/mahasiswa/components/modals/DetailMahasiswaModal";
 import UpdateStatusVerifikasiModal from "@/features/user-management/mahasiswa/components/modals/UpdateStatusVerifikasiModal";
+import Tabs from "@/components/common/Tabs";
 
 export default function AdminListMahasiswaPengajuJanjiTemu() {
     const [students, setStudents] = useState([]);
@@ -15,6 +16,16 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedStatusData, setSelectedStatusData] = useState(null);
     const [statusOptions, setStatusOptions] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Menunggu Verifikasi", value: "menunggu_verifikasi" },
+        { label: "Terverifikasi", value: "terverifikasi" },
+        { label: "Revisi Diperlukan", value: "revisi_diperlukan" },
+        { label: "Menunggu Peninjauan", value: "menunggu_peninjauan" },
+        { label: "Ditolak", value: "ditolak" },
+    ];
 
     // Fetch mahasiswa data (students)
     const fetchMahasiswa = async () => {
@@ -30,6 +41,12 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
     useEffect(() => {
         fetchMahasiswa();
     }, []);
+
+    const normalizeStatus = (status) => status.toLowerCase().replace(/\s+/g, "_");
+
+    const filteredData = selectedStatus === "all"
+        ? students
+        : students.filter(s => normalizeStatus(s.status_verifikasi.label) === selectedStatus);
 
     const openDetailModal = async (id) => {
         try {
@@ -74,18 +91,6 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
         }
     };
 
-    // Function to handle the removal of a student
-    const removeStudent = async (studentId) => {
-        try {
-            const response = await api.delete(`/mahasiswa/${studentId}`);
-            if (response.status === 200) {
-                setStudents(prevData => prevData.filter(student => student.id !== studentId));
-            }
-        } catch (error) {
-            console.error("Error deleting mahasiswa:", error);
-        }
-    };
-
     // Columns for DataTable
     const columns = [
         {
@@ -111,6 +116,21 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
             render: (item) => {
                 return `${item.program_studi.jenjang} ${item.program_studi.nama_program_studi}`;
             },
+        },
+        {
+            key: "phone_number",
+            title: "No. Telp",
+            sortable: true,
+            render: (item) => {
+                return (
+                    <a
+                        href={`https://wa.me/${item.phone_number}`}
+                        className="underline text-green-500"
+                    >
+                        WhatsApp
+                    </a>
+                )
+            }
         },
         {
             key: "status_verifikasi",
@@ -142,12 +162,6 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
                     >
                         Update Status Verifikasi
                     </button>
-                    <button
-                        className="px-4 py-1 text-red-600 bg-transparent border border-red-500 rounded hover:bg-red-500 hover:text-white dark:bg-red-500 dark:text-white"
-                        onClick={() => removeStudent(item.id)}
-                    >
-                        Remove
-                    </button>
                 </div>
             ),
         },
@@ -162,8 +176,9 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
             <PageBreadcrumb pageTitle="Manajemen Mahasiswa" />
             <div className="space-y-6">
                 <ComponentCard title="Data Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={students}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "nrp", direction: "asc" }}
                         searchable={true}

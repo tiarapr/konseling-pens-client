@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import RatingModal from "@/features/rating/components/modals/RatingModal";
 
-export default function RiwayatKonseling() {
+export default function MasterRiwayatKonseling() {
     const [konselingList, setKonselingList] = useState([]);
     const [catatanList, setCatatanList] = useState([]);
     const [showRatingModal, setShowRatingModal] = useState(false);
@@ -133,7 +133,7 @@ export default function RiwayatKonseling() {
             key: "catatan_konseling",
             title: "Catatan Konseling",
             render: (item) => {
-                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id); // Dapatkan catatan konseling yang cocok
+                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id);
                 return catatan ? (
                     <Link to={`/master-dashboard/catatan-konseling/${catatan.id}`}>
                        <span className="text-brand-500 underline">Detail</span>

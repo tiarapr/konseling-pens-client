@@ -6,6 +6,7 @@ import PageMeta from "@/components/common/PageMeta";
 import { ToastContainer, toast } from "react-toastify";
 import api from "@/api/api";
 import Detail from "../components/detail";
+import BackButton from "@/components/ui/button/BackButton";
 
 export default function MahasiswaDetailCatatanKonseling() {
     const { id: catatanKonselingId } = useParams();
@@ -45,6 +46,7 @@ export default function MahasiswaDetailCatatanKonseling() {
                 description="Halaman untuk detail catatan konseling"
             />
             <PageBreadcrumb pageTitle="Detail Catatan Konseling" />
+            <BackButton />
             <ComponentCard title="Detail Catatan Konseling">
                 <div className="space-y-6">
                     {catatanKonseling ? (

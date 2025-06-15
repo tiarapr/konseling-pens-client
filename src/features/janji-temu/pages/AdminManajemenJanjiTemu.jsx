@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import SetJadwalModal from "@/features/konseling/components/modals/SetJadwalModal";
 import AlasanPenolakanModal from "../components/modals/AlasanPenolakanModal";
 import { Link } from "react-router";
+import Tabs from "@/components/common/Tabs";
 
 export default function AdminManajemenJanjiTemu() {
     const [janjiTemuList, setJanjiTemuList] = useState([]);
@@ -19,6 +20,14 @@ export default function AdminManajemenJanjiTemu() {
     const { isOpen: isRejectModalOpen, openModal: openRejectModal, closeModal: closeRejectModal } = useModal();
     const [selectedJanjiTemu, setSelectedJanjiTemu] = useState(null);
     const [janjiTemuToReject, setJanjiTemuToReject] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Menunggu", value: "menunggu_konfirmasi" },
+        { label: "Dikonfirmasi", value: "dikonfirmasi" },
+        { label: "Ditolak", value: "ditolak" },
+    ];
 
     const fetchJanjiTemu = async () => {
         try {
@@ -30,6 +39,10 @@ export default function AdminManajemenJanjiTemu() {
             toast.error("Gagal mengambil data janji temu");
         }
     };
+
+    const filteredData = selectedStatus === "all"
+        ? janjiTemuList
+        : janjiTemuList.filter(j => j.status === selectedStatus);
 
     const fetchKonselors = async () => {
         try {
@@ -134,6 +147,21 @@ export default function AdminManajemenJanjiTemu() {
             key: "nrp",
             title: "NRP",
             sortable: true,
+        },
+        {
+            key: "phone_number",
+            title: "No. Telp",
+            sortable: true,
+            render: (item) => {
+                return (
+                    <a
+                        href={`https://wa.me/${item.phone_number}`}
+                        className="underline text-green-500"
+                    >
+                        WhatsApp
+                    </a>
+                )
+            }
         },
         {
             key: "tipe_konsultasi",
@@ -256,8 +284,9 @@ export default function AdminManajemenJanjiTemu() {
             <PageBreadcrumb pageTitle="Manajemen Janji Temu" />
             <div className="space-y-6">
                 <ComponentCard title="Data Janji Temu Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={janjiTemuList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_pengajuan", direction: "desc" }}
                         searchable={true}

@@ -5,18 +5,27 @@ import PageMeta from "@/components/common/PageMeta";
 import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
-import SetJadwalModal from "../components/modals/SetJadwalModal";
 import UpdateStatusModal from "../components/modals/UpdateStatusModal";
 import { Link } from "react-router";
+import Tabs from "@/components/common/Tabs";
+import RescheduleModal from "../components/modals/RescheduleModal"; // Import RescheduleModal
 
 export default function AdminManajemenKonseling() {
     const [konselingList, setKonselingList] = useState([]);
     const [showRescheduleModal, setShowRescheduleModal] = useState(false);
-    const [selectedJanjiTemu, setSelectedJanjiTemu] = useState(null);
+    const [selectedKonseling, setSelectedKonseling] = useState(null);
     const [konselorOptions, setKonselorOptions] = useState([]);
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedStatusData, setSelectedStatusData] = useState(null);
     const [statusOptions, setStatusOptions] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Dijadwalkan", value: "dijadwalkan" },
+        { label: "Dijadwalkan Ulang", value: "dijadwalkan_ulang" },
+        { label: "Berlangsung", value: "berlangsung" },
+    ];
 
     const fetchKonselors = async () => {
         const res = await api.get("/konselor");
@@ -46,8 +55,14 @@ export default function AdminManajemenKonseling() {
         fetchKonselors();
     }, []);
 
+    const normalizeStatus = (status) => status.toLowerCase().replace(/\s+/g, "_");
+
+    const filteredData = selectedStatus === "all"
+        ? konselingList
+        : konselingList.filter(k => normalizeStatus(k.status.name) === selectedStatus);
+
     const handleEdit = (item) => {
-        setSelectedJanjiTemu(item);
+        setSelectedKonseling(item);
         setShowRescheduleModal(true);
     };
 
@@ -138,13 +153,11 @@ export default function AdminManajemenKonseling() {
             render: (item) => (
                 <Badge
                     size="sm"
-                    color={
-                        item.status_kehadiran === true
-                            ? "success"
-                            : item.status_kehadiran === false
-                                ? "error"
-                                : "warning"
-                    }
+                    color={item.status_kehadiran === true
+                        ? "success"
+                        : item.status_kehadiran === false
+                            ? "error"
+                            : "warning"}
                 >
                     {item.status_kehadiran === true
                         ? "Hadir"
@@ -158,7 +171,7 @@ export default function AdminManajemenKonseling() {
             key: "aksi",
             title: "Aksi",
             render: (item) => (
-                <div className="flex flex-col w-full space-x-2 gap-3">
+                <div className="flex flex-col w-42 space-x-2 gap-3">
                     <button
                         onClick={() => handleEdit(item)}
                         className="px-4 py-1 text-warning-700 border border-warning-700 rounded hover:bg-warning-700 hover:text-white"
@@ -167,18 +180,19 @@ export default function AdminManajemenKonseling() {
                     </button>
                     <button
                         onClick={() => handleUpdateStatus(item)}
-                        className="px-2 py-1 text-green-700 border border-green-700 rounded hover:bg-green-700 hover:text-white"
+                        className="px-2 py-1 text-brand-500 border border-brand-500 rounded hover:bg-brand-600 hover:text-white"
                     >
                         Update Status
                     </button>
-                    {item.status.name.toLowerCase() === "berlangsung" && (
+                    <button
+                        className="px-2 py-1 text-green-700 border border-green-700 rounded hover:bg-green-700 hover:text-white"
+                    >
                         <a
-                            href={`/konseling/${item.id}/catatan`}
-                            className="px-2 py-1 text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white text-center"
+                            href={`https://wa.me/${item.no_telp}`}
                         >
-                            + Catatan Konseling
+                            WhatsApp
                         </a>
-                    )}
+                    </button>
                 </div>
             ),
         }
@@ -193,8 +207,9 @@ export default function AdminManajemenKonseling() {
             <PageBreadcrumb pageTitle="Manajemen Konseling" />
             <div className="space-y-6">
                 <ComponentCard title="Data Konseling Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={konselingList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_konseling", direction: "desc" }}
                         searchable={true}
@@ -204,17 +219,24 @@ export default function AdminManajemenKonseling() {
                     />
                 </ComponentCard>
             </div>
-            <SetJadwalModal
+
+            {/* Reschedule Modal */}
+            <RescheduleModal
                 isOpen={showRescheduleModal}
                 closeModal={() => setShowRescheduleModal(false)}
-                janjiTemu={selectedJanjiTemu}
-                onSubmit={async (updatedData) => {
-                    console.log("Data yang dikirim:", updatedData);
-                    await api.put(`/konseling/${updatedData.janji_temu_id}/reschedule`, updatedData);
-                    fetchKonseling();
-                }}
+                konseling={selectedKonseling}
                 konselorOptions={konselorOptions}
+                onSubmit={async (data) => {
+                    try {
+                        await api.put(`/konseling/${selectedKonseling.id}/reschedule`, data);
+                        fetchKonseling(); // Refresh the data after rescheduling
+                    } catch (error) {
+                        console.error("Failed to reschedule:", error);
+                    }
+                }}
             />
+
+            {/* Update Status Modal */}
             <UpdateStatusModal
                 isOpen={showStatusModal}
                 closeModal={() => setShowStatusModal(false)}

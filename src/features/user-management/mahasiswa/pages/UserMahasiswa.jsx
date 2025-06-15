@@ -7,6 +7,7 @@ import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
 import DetailMahasiswaModal from "../components/modals/DetailMahasiswaModal";
 import UpdateStatusVerifikasiModal from "../components/modals/UpdateStatusVerifikasiModal";
+import Tabs from "@/components/common/Tabs";
 
 const Mahasiswa = () => {
     const [students, setStudents] = useState([]);
@@ -15,6 +16,16 @@ const Mahasiswa = () => {
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedStatusData, setSelectedStatusData] = useState(null);
     const [statusOptions, setStatusOptions] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Menunggu Verifikasi", value: "menunggu_verifikasi" },
+        { label: "Terverifikasi", value: "terverifikasi" },
+        { label: "Revisi Diperlukan", value: "revisi_diperlukan" },
+        { label: "Menunggu Peninjauan", value: "menunggu_peninjauan" },
+        { label: "Ditolak", value: "ditolak" },
+    ];
 
     // Fetch mahasiswa data (students)
     const fetchMahasiswa = async () => {
@@ -30,6 +41,12 @@ const Mahasiswa = () => {
     useEffect(() => {
         fetchMahasiswa();
     }, []);
+
+    const normalizeStatus = (status) => status.toLowerCase().replace(/\s+/g, "_");
+
+    const filteredData = selectedStatus === "all"
+        ? students
+        : students.filter(s => normalizeStatus(s.status_verifikasi.label) === selectedStatus);
 
     const openDetailModal = async (id) => {
         try {
@@ -113,16 +130,33 @@ const Mahasiswa = () => {
             },
         },
         {
+            key: "phone_number",
+            title: "No. Telp",
+            sortable: true,
+            render: (item) => {
+                return (
+                    <a
+                        href={`https://wa.me/${item.phone_number}`}
+                        className="underline text-green-500"
+                    >
+                        WhatsApp
+                    </a>
+                )
+            }
+        },
+        {
             key: "status_verifikasi",
             title: "Status Verifikasi",
             sortable: true,
             render: (item) => (
-                <Badge
-                    size="sm"
-                    color={item.status_verifikasi ? item.status_verifikasi.warna : "gray"}
-                >
-                    {item.status_verifikasi ? item.status_verifikasi.label : "Unknown Status"}
-                </Badge>
+                <div className="w-38">
+                    <Badge
+                        size="sm"
+                        color={item.status_verifikasi ? item.status_verifikasi.warna : "gray"}
+                    >
+                        {item.status_verifikasi ? item.status_verifikasi.label : "Unknown Status"}
+                    </Badge>
+                </div>
             )
         },
         {
@@ -162,8 +196,9 @@ const Mahasiswa = () => {
             <PageBreadcrumb pageTitle="Manajemen Mahasiswa" />
             <div className="space-y-6">
                 <ComponentCard title="Data Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={students}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "nrp", direction: "asc" }}
                         searchable={true}

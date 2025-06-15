@@ -113,6 +113,7 @@ const menuItemsByRole = {
             subItems: [
                 { name: "Data Konseling", path: "/admin-dashboard/konseling" },
                 { name: "Jadwal Konseling", path: "/admin-dashboard/jadwal-konseling" },
+                { name: "Riwayat Konseling", path: "/admin-dashboard/riwayat-konseling" },
             ],
         },
         {

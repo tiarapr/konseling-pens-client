@@ -5,20 +5,15 @@ import PageMeta from "@/components/common/PageMeta";
 import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
-import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import RatingModal from "@/features/rating/components/modals/RatingModal";
 
-export default function MahasiswaRiwayatKonseling() {
+export default function AdminRiwayatKonseling() {
     const [konselingList, setKonselingList] = useState([]);
-    const [catatanList, setCatatanList] = useState([]);
-    const [showRatingModal, setShowRatingModal] = useState(false);
-    const [selectedKonselingId, setSelectedKonselingId] = useState(null);
 
     // Fetch konseling data
     const fetchKonseling = async () => {
         try {
-            const response = await api.get("/konseling/me");
+            const response = await api.get("/konseling");
             const konseling = response.data.data.konseling;
 
             // Filter untuk hanya menampilkan status dijadwalkan, dijadwalkan ulang, atau berlangsung
@@ -28,19 +23,6 @@ export default function MahasiswaRiwayatKonseling() {
             });
 
             setKonselingList(filteredKonseling);
-
-            // Fetch data catatan konseling berdasarkan konseling_id dengan API /catatan-konseling/konseling/:id
-            const catatanPromises = filteredKonseling.map((item) =>
-                api.get(`/catatan-konseling/own/konseling/${item.id}`).then((res) => {
-                    // Ambil catatan konseling pertama jika ada
-                    const catatan = res.data.data.catatan_konseling[0]; // Mengakses objek pertama langsung
-                    return catatan || null; // Kembalikan null jika tidak ada catatan
-                })
-            );
-
-            // Tunggu sampai semua request selesai dan simpan data catatan konseling
-            const catatanResponses = await Promise.all(catatanPromises);
-            setCatatanList(catatanResponses);
         } catch (error) {
             console.error("Error fetching konseling data:", error);
         }
@@ -101,11 +83,9 @@ export default function MahasiswaRiwayatKonseling() {
             title: "Status",
             sortable: true,
             render: (item) => (
-                <div className="w-36">
-                    <Badge size="sm" color={item.status.warna}>
-                        {item.status.name}
-                    </Badge>
-                </div>
+                <Badge size="sm" color={item.status.warna}>
+                    {item.status.name}
+                </Badge>
             ),
         },
         {
@@ -132,54 +112,26 @@ export default function MahasiswaRiwayatKonseling() {
             ),
         },
         {
-            key: "catatan_konseling",
-            title: "Catatan Konseling",
-            render: (item) => {
-                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id); 
-                return catatan ? (
-                    <Link to={`/dashboard/catatan-konseling/${catatan.id}`}>
-                        Detail
-                    </Link>
-                ) : (
-                    <span className="text-gray-400">Catatan tidak tersedia</span>
-                );
-            },
-        },
-        {
             key: "rating",
             title: "Rating",
             sortable: false,
-            render: (item) => {
-                if (item.rating) {
-                    return (
-                        <div className="flex items-center space-x-2">
-                            <div className="flex space-x-1">
-                                {[...Array(5)].map((_, index) => (
-                                    <FaStar
-                                        key={index}
-                                        className={`h-5 w-5 ${index < item.rating.nilai ? "text-yellow-400" : "text-gray-300"}`}
-                                    />
-                                ))}
-                            </div>
-                            <span className="text-sm text-gray-600">({item.rating.nilai}/5)</span>
+            render: (item) =>
+                item.rating ? (
+                    <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                            {[...Array(5)].map((_, index) => (
+                                <FaStar
+                                    key={index}
+                                    className={`h-5 w-5 ${index < item.rating.nilai ? "text-yellow-400" : "text-gray-300"
+                                        }`}
+                                />
+                            ))}
                         </div>
-                    );
-                } else if (item.status.name.toLowerCase() === "selesai") {
-                    return (
-                        <button
-                            className="text-blue-600 underline"
-                            onClick={() => {
-                                setSelectedKonselingId(item.id);
-                                setShowRatingModal(true);
-                            }}
-                        >
-                            Beri Rating
-                        </button>
-                    );
-                } else {
-                    return <span className="text-gray-400">Tidak Tersedia</span>;
-                }
-            },
+                        <span className="text-sm text-gray-600">({item.rating.nilai}/5)</span>
+                    </div>
+                ) : (
+                    <span className="text-gray-400">Belum ada rating</span>
+                )
         },
 
     ];
@@ -190,7 +142,7 @@ export default function MahasiswaRiwayatKonseling() {
                 title="Konseling PENS Dashboard | Riwayat Konseling"
                 description="Halaman riwayat konseling mahasiswa"
             />
-            <PageBreadcrumb pageTitle="Riwayat Konseling" />
+            <PageBreadcrumb pageTitle="Manajemen Konseling" />
             <div className="space-y-6">
                 <ComponentCard title="Data Riwayat Konseling Mahasiswa">
                     <DataTable
@@ -204,12 +156,6 @@ export default function MahasiswaRiwayatKonseling() {
                     />
                 </ComponentCard>
             </div>
-            <RatingModal
-                isOpen={showRatingModal}
-                closeModal={() => setShowRatingModal(false)}
-                konselingId={selectedKonselingId}
-                onSuccess={fetchKonseling}
-            />
         </>
     );
 };

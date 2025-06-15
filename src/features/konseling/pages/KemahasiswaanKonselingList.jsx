@@ -6,9 +6,21 @@ import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
 import { Link } from "react-router";
+import Tabs from "@/components/common/Tabs";
 
 export default function KemahasiswaanKonselingList() {
     const [konselingList, setKonselingList] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("all");
+
+    const statusTabs = [
+        { label: "Semua", value: "all" },
+        { label: "Dijadwalkan", value: "dijadwalkan" },
+        { label: "Dijadwalkan Ulang", value: "dijadwalkan_ulang" },
+        { label: "Berlangsung", value: "berlangsung" },
+        { label: "Dibatalkan", value: "dibatalkan" },
+         { label: "Dibatalkan Otomatis", value: "dibatalkan_otomatis" },
+        { label: "Selesai", value: "selesai" },
+    ];
 
     const fetchKonseling = async () => {
         try {
@@ -23,6 +35,12 @@ export default function KemahasiswaanKonselingList() {
     useEffect(() => {
         fetchKonseling();
     }, []);
+
+    const normalizeStatus = (status) => status.toLowerCase().replace(/\s+/g, "_");
+
+    const filteredData = selectedStatus === "all"
+        ? konselingList
+        : konselingList.filter(k => normalizeStatus(k.status.name) === selectedStatus);
 
     const columns = [
         {
@@ -85,12 +103,14 @@ export default function KemahasiswaanKonselingList() {
             title: "Status",
             sortable: true,
             render: (item) => (
-                <Badge
-                    size="sm"
-                    color={item.status.warna}
-                >
-                    {item.status.name}
-                </Badge>
+                <div className="w-36">
+                    <Badge
+                        size="sm"
+                        color={item.status.warna}
+                    >
+                        {item.status.name}
+                    </Badge>
+                </div>
             )
         },
         {
@@ -98,22 +118,24 @@ export default function KemahasiswaanKonselingList() {
             title: "Status Kehadiran",
             sortable: true,
             render: (item) => (
-                <Badge
-                    size="sm"
-                    color={
-                        item.status_kehadiran === true
-                            ? "success"
+                <div className="w-34">
+                    <Badge
+                        size="sm"
+                        color={
+                            item.status_kehadiran === true
+                                ? "success"
+                                : item.status_kehadiran === false
+                                    ? "error"
+                                    : "warning"
+                        }
+                    >
+                        {item.status_kehadiran === true
+                            ? "Hadir"
                             : item.status_kehadiran === false
-                                ? "error"
-                                : "warning"
-                    }
-                >
-                    {item.status_kehadiran === true
-                        ? "Hadir"
-                        : item.status_kehadiran === false
-                            ? "Tidak Hadir"
-                            : "Belum Dikonfirmasi"}
-                </Badge>
+                                ? "Tidak Hadir"
+                                : "Belum Dikonfirmasi"}
+                    </Badge>
+                </div>
             ),
         },
     ];
@@ -127,8 +149,9 @@ export default function KemahasiswaanKonselingList() {
             <PageBreadcrumb pageTitle="Manajemen Konseling" />
             <div className="space-y-6">
                 <ComponentCard title="Data Konseling Mahasiswa">
+                    <Tabs tabs={statusTabs} activeTab={selectedStatus} onChange={setSelectedStatus} />
                     <DataTable
-                        data={konselingList}
+                        data={filteredData}
                         columns={columns}
                         defaultSort={{ key: "tanggal_konseling", direction: "desc" }}
                         searchable={true}
