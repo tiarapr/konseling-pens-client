@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronDownIcon } from "../../icons"; // Assuming this is imported correctly
+import React, { useState, useEffect } from "react";
+import ReactSelect from "react-select";
 
 const Select = ({
   options,
@@ -8,44 +8,74 @@ const Select = ({
   defaultValue = "",
   placeholder = "Select an option",
 }) => {
-  const [selectedValue, setSelectedValue] = useState(defaultValue);
+  const [selectedOption, setSelectedOption] = useState(null);
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setSelectedValue(value);
-    onChange(value);
+  useEffect(() => {
+    if (defaultValue) {
+      const defaultOption = options.find((opt) => opt.value === defaultValue);
+      setSelectedOption(defaultOption);
+    }
+  }, [defaultValue, options]);
+
+  const handleChange = (selected) => {
+    setSelectedOption(selected);
+    onChange?.(selected?.value);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      minHeight: "2.75rem",
+      borderRadius: "0.5rem",
+      borderColor: state.isFocused ? "#60A5FA" : "var(--tw-border-color, #D1D5DB)",
+      boxShadow: state.isFocused ? "0 0 0 3px rgba(59,130,246,0.1)" : "none",
+      backgroundColor: "transparent",
+      color: "inherit",
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      fontSize: 14,
+      paddingLeft: 4,
+      color: "var(--tw-placeholder-color, #9CA3AF)",
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: "var(--tw-placeholder-color, #9CA3AF)", // Sama seperti placeholder
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "var(--tw-text-color, #111827)",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      zIndex: 20,
+      backgroundColor: "var(--tw-bg-color, white)",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused
+        ? "rgba(59,130,246,0.1)"
+        : "transparent",
+      color: "var(--tw-text-color, #111827)",
+    }),
   };
 
   return (
-    <div className={`relative ${className}`}>
-      <select
-        className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-8 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${selectedValue
-          ? "text-gray-800 dark:text-white/90"
-          : "text-gray-400 dark:text-gray-400"
-          } ${className}`}
-        value={selectedValue}
+    <div
+      className={`relative ${className} 
+      dark:[--tw-text-color:#F3F4F6] 
+      dark:[--tw-bg-color:#374151] 
+      dark:[--tw-placeholder-color:#9CA3AF] 
+      dark:[--tw-border-color:#374151]`}
+    >
+      <ReactSelect
+        options={options}
+        value={selectedOption}
         onChange={handleChange}
-      >
-        <option value="" disabled hidden>
-          {placeholder}
-        </option>
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-        <ChevronDownIcon
-          width={16}
-          height={16}
-          className="text-gray-400 dark:text-gray-500"
-        />
-      </div>
+        placeholder={placeholder}
+        styles={customStyles}
+        classNamePrefix="react-select"
+      />
     </div>
   );
 };

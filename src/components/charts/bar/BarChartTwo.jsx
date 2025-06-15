@@ -1,8 +1,8 @@
 import Chart from "react-apexcharts";
 import { useState } from "react";
-import { Dropdown } from "../../ui/dropdown/Dropdown";
-import { DropdownItem } from "../../ui/dropdown/DropdownItem";
-import { MoreDotIcon } from "../../../icons";
+import { Dropdown } from "@/components/ui/dropdown/Dropdown";
+import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import { MoreDotIcon } from "@/icons";
 
 export default function BarChartTwo({
   title = "",

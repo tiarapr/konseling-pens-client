@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import api from "../../api/api";
+import api from "@/api/api";
 import Swal from "sweetalert2";
-import Button from "../ui/button/Button";
-import Input from "../form/input/InputField";
-import Label from "../form/Label";
+import Button from "@/components/ui/button/Button";
+import Input from "@/components/form/input/InputField";
+import Label from "@/components/form/Label";
 
 export default function UserPasswordCard() {
   const [user, setUser] = useState(null);

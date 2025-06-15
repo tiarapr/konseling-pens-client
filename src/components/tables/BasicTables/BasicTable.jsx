@@ -4,7 +4,7 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../../ui/table";
+} from "@/components/ui/table";
 
 const BasicTable = ({ columns, data }) => {
   return (

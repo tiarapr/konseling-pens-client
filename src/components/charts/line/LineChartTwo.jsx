@@ -1,6 +1,5 @@
 import Chart from "react-apexcharts";
-import TabSwitcher from "../../common/TabSwitcher";
-import PropTypes from 'prop-types';
+import TabSwitcher from "@/components/common/TabSwitcher";
 import { useState } from "react";
 
 const LineChartTwo = ({
