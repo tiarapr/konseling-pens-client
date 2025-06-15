@@ -62,11 +62,10 @@ export default function AddRolePermissionModal({ isOpen, closeModal, onSubmitSuc
 
         setLoading(true);
         try {
-            // Map selected permission IDs to permission names
-            const permissionNames = selectedPermissions.map((id) => {
-                const perm = permissionOptions.find((p) => p.value === id);
-                return perm ? perm.label : null;
-            }).filter(Boolean);
+            // Get permission names directly from selected permission IDs
+            const permissionNames = permissionOptions
+                .filter(permission => selectedPermissions.includes(permission.value))
+                .map(permission => permission.label);
 
             await api.post("/role-permissions", {
                 role_id: selectedRole,
