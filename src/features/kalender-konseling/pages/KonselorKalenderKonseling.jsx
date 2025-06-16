@@ -91,7 +91,7 @@ export default function KonselorKalenderKonseling() {
   useEffect(() => {
     async function fetchKonseling() {
       try {
-        const res = await api.get("/konseling/my");
+        const res = await api.get("/konseling/konselor");
         // Cek respon utama dulu
         if (res.data.status === "success" && res.data.data?.konseling) {
           // Filter hanya konseling dengan status yang diinginkan

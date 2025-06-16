@@ -44,7 +44,7 @@ export default function UpdateStatusVerifikasiModal({
         closeModal();
     };
 
-    const filteredStatusOptions = statusOptions.filter((s) => 
+    const filteredStatusOptions = statusOptions.filter((s) =>
         s.label.toLowerCase() !== "menunggu verifikasi" && s.label.toLowerCase() !== "menunggu peninjauan"
     );
 
@@ -79,7 +79,7 @@ export default function UpdateStatusVerifikasiModal({
                         <TextArea
                             id="catatan"
                             value={catatanVerifikasi}
-                            onChange={setCatatanVerifikasi}
+                            onChange={(e) => setCatatanVerifikasi(e.target.value)}
                             placeholder="Masukkan catatan verifikasi"
                             className="w-full"
                         />
