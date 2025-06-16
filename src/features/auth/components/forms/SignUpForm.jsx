@@ -127,7 +127,7 @@ export default function SignUpForm() {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="Enter your NET ID"
+                  placeholder="user@it.student.pens.ac.id"
                   required
                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   title="Please enter a valid email address"
@@ -141,7 +141,7 @@ export default function SignUpForm() {
                 </Label>
                 <div className="relative">
                   <Input
-                    placeholder="Enter your password"
+                    placeholder="At least 8 characters, including uppercase, lowercase, and numbers"
                     type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
@@ -174,7 +174,7 @@ export default function SignUpForm() {
                   type="tel"
                   id="phoneNumber"
                   name="phoneNumber"
-                  placeholder="Enter your phone number"
+                  placeholder="628812345678"
                   required
                   pattern="[0-9]{10,15}"
                   title="Phone number must be between 10-15 digits"
