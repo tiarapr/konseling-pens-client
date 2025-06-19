@@ -41,7 +41,7 @@ export default function MahasiswaProfilCard() {
     const handleMintaTinjau = async () => {
         setSubmitting(true);
         try {
-            await api.put(`/mahasiswa/${mahasiswa.id}/verifikasi-ulang`);
+            await api.put(`/mahasiswa/${mahasiswa.id}/tinjau-ulang`);
             alert("Permintaan tinjau ulang berhasil dikirim.");
             fetchMahasiswa();
         } catch (err) {
