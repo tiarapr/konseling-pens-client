@@ -56,7 +56,7 @@ export default function DetailMahasiswaModal({ isOpen, closeModal, mahasiswa }) 
                         <div className="lg:col-span-2">
                             <Label>Kartu Tanda Mahasiswa (KTM)</Label>
                             <img
-                                src={`${BASE_URL}${mahasiswa.ktm_url}`}
+                                src={`${mahasiswa.ktm_url}`}
                                 alt="KTM"
                                 className="mt-2 max-w-xs rounded shadow-md border"
                             />
