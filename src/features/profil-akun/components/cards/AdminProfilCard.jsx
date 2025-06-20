@@ -128,7 +128,7 @@ export default function AdminProfileCard() {
               <img
                 src={
                   photo ? URL.createObjectURL(photo) : 
-                  admin.photo_url ? `${BASE_URL}${admin.photo_url}` : "/images/profile/default-profile.png"
+                  admin.photo_url ? `${admin.photo_url}` : "/images/profile/default-profile.png"
                 }
                 alt="user"
                 className="w-full h-full object-cover"

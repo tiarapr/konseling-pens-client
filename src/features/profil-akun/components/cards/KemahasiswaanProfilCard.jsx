@@ -135,7 +135,7 @@ export default function KemahasiswaanProfileCard() {
             <img
                 src={
                   photo ? URL.createObjectURL(photo) : 
-                  kemahasiswaan.photo_url ? `${BASE_URL}${kemahasiswaan.photo_url}` : "/images/profile/default-profile.png"
+                  kemahasiswaan.photo_url ? `${kemahasiswaan.photo_url}` : "/images/profile/default-profile.png"
                 }
                 alt="user"
                 className="w-full h-full object-cover"

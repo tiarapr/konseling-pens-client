@@ -135,7 +135,7 @@ export default function KonselorProfileCard() {
             <img
                 src={
                   photo ? URL.createObjectURL(photo) : 
-                  konselor.photo_url ? `${BASE_URL}${konselor.photo_url}` : "/images/profile/default-profile.png"
+                  konselor.photo_url ? `${konselor.photo_url}` : "/images/profile/default-profile.png"
                 }
                 alt="user"
                 className="w-full h-full object-cover"

@@ -181,7 +181,7 @@ export default function MahasiswaProfilCard() {
                     </div>
                     <div className="w-full max-w-xs overflow-hidden border border-gray-200 rounded-sm dark:border-gray-700">
                         <img
-                            src={`${BASE_URL}${mahasiswa.ktm_url}`}
+                            src={`${mahasiswa.ktm_url}`}
                             alt="Kartu Tanda Mahasiswa"
                             className="w-full h-auto object-cover"
                         />
