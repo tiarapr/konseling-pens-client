@@ -9,6 +9,7 @@ import SetJadwalModal from "../components/modals/SetJadwalModal";
 import UpdateStatusModal from "../components/modals/UpdateStatusModal";
 import { Link } from "react-router";
 import Tabs from "@/components/common/Tabs";
+import DetailMahasiswaModal from "@/features/user-management/mahasiswa/components/modals/DetailMahasiswaModal";
 
 export default function MasterKonseling() {
     const [konselingList, setKonselingList] = useState([]);
@@ -19,6 +20,8 @@ export default function MasterKonseling() {
     const [selectedStatusData, setSelectedStatusData] = useState(null);
     const [statusOptions, setStatusOptions] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("all");
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
     const statusTabs = [
         { label: "Semua", value: "all" },
@@ -61,6 +64,17 @@ export default function MasterKonseling() {
         ? konselingList
         : konselingList.filter(k => normalizeStatus(k.status.name) === selectedStatus);
 
+    const openDetailModal = async (nrp) => {
+        try {
+            const res = await api.get(`/mahasiswa/nrp/${nrp}`);
+            const detail = res.data.data.mahasiswa;
+            setSelectedStudent(detail);
+            setIsDetailModalOpen(true);
+        } catch (error) {
+            console.error("Gagal mengambil detail mahasiswa:", error);
+        }
+    };
+
     const handleEdit = (item) => {
         setSelectedJanjiTemu(item);
         setShowRescheduleModal(true);
@@ -83,10 +97,9 @@ export default function MasterKonseling() {
             title: "Nama Mahasiswa",
             sortable: true,
             render: (item) => (
-                <Link to='/admin-dashboard/mahasiswa'>
-                    <a className="underline hover:text-brand-500">{item.mahasiswa}</a>
-                </Link>
+                <a onClick={() => openDetailModal(item.mahasiswa.nrp)} className="underline hover:text-brand-500">{item.mahasiswa.nama}</a>
             ),
+            exportRenderer: (item) => item.mahasiswa.nama
         },
         {
             key: "konselor",
@@ -97,6 +110,7 @@ export default function MasterKonseling() {
                     <a className="underline hover:text-brand-500">{item.konselor}</a>
                 </Link>
             ),
+            exportRenderer: (item) => item.konselor
         },
         {
             key: "tipe_konsultasi",
@@ -108,7 +122,8 @@ export default function MasterKonseling() {
                     : item.tipe_konsultasi === "offline"
                         ? "Offline"
                         : "Tidak Diketahui";
-            }
+            },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -144,7 +159,8 @@ export default function MasterKonseling() {
                 >
                     {item.status.name}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -168,10 +184,17 @@ export default function MasterKonseling() {
                             : "Belum Dikonfirmasi"}
                 </Badge>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
         {
             key: "aksi",
             title: "Aksi",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex flex-col w-full space-x-2 gap-3">
                     <button
@@ -226,9 +249,16 @@ export default function MasterKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="konseling-data"
                     />
                 </ComponentCard>
             </div>
+            <DetailMahasiswaModal
+                isOpen={isDetailModalOpen}
+                closeModal={() => setIsDetailModalOpen(false)}
+                mahasiswa={selectedStudent}
+            />
+
             <SetJadwalModal
                 isOpen={showRescheduleModal}
                 closeModal={() => setShowRescheduleModal(false)}

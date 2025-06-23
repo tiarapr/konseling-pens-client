@@ -142,7 +142,8 @@ const Mahasiswa = () => {
                         WhatsApp
                     </a>
                 )
-            }
+            }, 
+            exportRenderer: (item) => item.phone_number,
         },
         {
             key: "status_verifikasi",
@@ -157,11 +158,13 @@ const Mahasiswa = () => {
                         {item.status_verifikasi ? item.status_verifikasi.label : "Unknown Status"}
                     </Badge>
                 </div>
-            )
+            ), 
+            exportRenderer: (item) =>item.status_verifikasi.label,
         },
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex flex-col space-y-2">
                     <button
@@ -205,6 +208,7 @@ const Mahasiswa = () => {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="mahasiswa-data"
                     />
                 </ComponentCard>
             </div>

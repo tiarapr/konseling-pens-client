@@ -85,6 +85,7 @@ export default function KonselorKonseling() {
                     </Link>
                 );
             },
+            exportRenderer: (item) => item.mahasiswa.nama
         },
         {
             key: "konselor",
@@ -102,6 +103,7 @@ export default function KonselorKonseling() {
                         ? "Offline"
                         : "Tidak Diketahui";
             },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -135,6 +137,7 @@ export default function KonselorKonseling() {
                     {item?.status?.name || "Status Tidak Diketahui"}
                 </Badge>
             ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -158,10 +161,17 @@ export default function KonselorKonseling() {
                             : "Belum Dikonfirmasi"}
                 </Badge>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
         {
             key: "aksi",
             title: "Aksi",
+            excluedeFromExport: true,
             render: (item) => (
                 <div className="flex flex-col w-full space-x-2 gap-3">
                     <button
@@ -210,6 +220,7 @@ export default function KonselorKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="konseling-data"
                     />
                 </ComponentCard>
             </div>

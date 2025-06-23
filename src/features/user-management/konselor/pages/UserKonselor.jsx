@@ -70,7 +70,9 @@ const Konselor = () => {
                         </span>
                     </div>
                 </div>
-            )
+            ),
+            exportRenderer: (item) =>
+                `${item.nama_lengkap}${item.spesialisasi ? ` - ${item.spesialisasi}` : ""}`,
         },
         {
             key: "sipp",
@@ -100,7 +102,9 @@ const Konselor = () => {
                         {item.is_verified ? "Sudah Verifikasi" : "Belum Verifikasi"}
                     </Badge>
                 </div>
-            )
+            ),
+            exportRenderer: (item) =>
+                item.is_verified ? "Sudah Verifikasi" : "Belum Verifikasi"
         },
         {
             key: "created_at",
@@ -118,6 +122,7 @@ const Konselor = () => {
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex space-x-2">
                     <button
@@ -155,6 +160,7 @@ const Konselor = () => {
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
                         onAddClick={openAddModal}
+                        exportFileName="konselor-data"
                     />
                 </ComponentCard>
             </div>

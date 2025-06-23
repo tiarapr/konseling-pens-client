@@ -72,6 +72,7 @@ export default function MahasiswaRiwayatKonseling() {
                         ? "Offline"
                         : "Tidak Diketahui";
             },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -107,6 +108,7 @@ export default function MahasiswaRiwayatKonseling() {
                     </Badge>
                 </div>
             ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -130,12 +132,19 @@ export default function MahasiswaRiwayatKonseling() {
                             : "Belum Dikonfirmasi"}
                 </Badge>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
         {
             key: "catatan_konseling",
             title: "Catatan Konseling",
+            excludeFromExport: true,
             render: (item) => {
-                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id); 
+                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id);
                 return catatan ? (
                     <Link to={`/dashboard/catatan-konseling/${catatan.id}`}>
                         Detail
@@ -180,6 +189,10 @@ export default function MahasiswaRiwayatKonseling() {
                     return <span className="text-gray-400">Tidak Tersedia</span>;
                 }
             },
+            exportRenderer: (item) =>
+                item.rating && typeof item.rating.nilai === "number"
+                    ? `${item.rating.nilai} / 5`
+                    : "Belum ada rating"
         },
 
     ];
@@ -201,6 +214,7 @@ export default function MahasiswaRiwayatKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="riwayat-konseling-data"
                     />
                 </ComponentCard>
             </div>

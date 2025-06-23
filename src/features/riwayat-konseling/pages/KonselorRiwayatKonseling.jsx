@@ -49,17 +49,17 @@ export default function KonselorRiwayatKonseling() {
 
     const columns = [
         {
-        key: "mahasiswa",
-        title: "Nama Mahasiswa",
-        sortable: true,
-        render: (item) => item.mahasiswa?.nama || "N/A", 
-    },
-    {
-        key: "konselor",
-        title: "Nama Konselor",
-        sortable: true,
-        render: (item) => item.konselor || "N/A", 
-    },
+            key: "mahasiswa",
+            title: "Nama Mahasiswa",
+            sortable: true,
+            render: (item) => item.mahasiswa?.nama || "N/A",
+        },
+        {
+            key: "konselor",
+            title: "Nama Konselor",
+            sortable: true,
+            render: (item) => item.konselor || "N/A",
+        },
         {
             key: "tipe_konsultasi",
             title: "Tipe Konsultasi",
@@ -71,6 +71,7 @@ export default function KonselorRiwayatKonseling() {
                         ? "Offline"
                         : "Tidak Diketahui";
             },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -104,6 +105,7 @@ export default function KonselorRiwayatKonseling() {
                     {item.status.name}
                 </Badge>
             ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -127,12 +129,19 @@ export default function KonselorRiwayatKonseling() {
                             : "Belum Dikonfirmasi"}
                 </Badge>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
         {
             key: "catatan_konseling",
             title: "Catatan Konseling",
+            excludeFromExport: true,
             render: (item) => {
-                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id); 
+                const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id);
                 return catatan ? (
                     <Link to={`/konselor-dashboard/catatan-konseling/${catatan.id}`}>
                         <span className="text-brand-500 underline">Detail</span>
@@ -162,7 +171,11 @@ export default function KonselorRiwayatKonseling() {
                     </div>
                 ) : (
                     <span className="text-gray-400">Belum ada rating</span>
-                )
+                ),
+            exportRenderer: (item) =>
+                item.rating && typeof item.rating.nilai === "number"
+                    ? `${item.rating.nilai} / 5`
+                    : "Belum ada rating"
         },
     ];
 
@@ -183,6 +196,7 @@ export default function KonselorRiwayatKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="riwayat-konseling-data"
                     />
                 </ComponentCard>
             </div>

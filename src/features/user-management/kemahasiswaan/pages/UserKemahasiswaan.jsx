@@ -70,7 +70,9 @@ const Kemahasiswaan = () => {
                         </span>
                     </div>
                 </div>
-            )
+            ),
+            exportRenderer: (item) =>
+                `${item.nama_lengkap}${item.jabatan ? ` - ${item.jabatan}` : ""}`,
         },
         {
             key: "nip",
@@ -98,7 +100,9 @@ const Kemahasiswaan = () => {
                 >
                     {item.is_verified ? "Sudah Verifikasi" : "Belum Verifikasi"}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) =>
+                item.is_verified ? "Sudah Verifikasi" : "Belum Verifikasi"
         },
         {
             key: "created_at",
@@ -116,6 +120,7 @@ const Kemahasiswaan = () => {
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex space-x-2">
                     <button
@@ -153,6 +158,7 @@ const Kemahasiswaan = () => {
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
                         onAddClick={openAddModal}
+                        exportFileName="kemahasiswaan-data"
                     />
                 </ComponentCard>
             </div>

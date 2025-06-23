@@ -54,6 +54,7 @@ export default function MahasiswaJanjiTemu() {
             render: (item) => (
                 <span className="capitalize">{item.tipe_konsultasi}</span>
             ),
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "jadwal_utama_tanggal",
@@ -100,7 +101,8 @@ export default function MahasiswaJanjiTemu() {
                 >
                     {item.status}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) => item.status
         },
         {
             key: "alasan_penolakan",
@@ -114,7 +116,8 @@ export default function MahasiswaJanjiTemu() {
                         <span className="text-gray-400 italic">Tidak ada alasan penolakan</span>
                     )}
                 </div>
-            )
+            ),
+            exportRenderer: (item) => item.alasan_penolakan
         }
     ];
 
@@ -138,6 +141,7 @@ export default function MahasiswaJanjiTemu() {
                         defaultItemsPerPage={5}
                         addButtonText="+ Pengajuan Janji Temu"
                         addButtonLink="/dashboard/janji-temu/new"
+                        exportFileName="janji-temu-data"
                     />
                 </ComponentCard>
             </div>

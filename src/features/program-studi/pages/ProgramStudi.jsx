@@ -72,6 +72,7 @@ export default function ProgramStudi() {
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex space-x-2">
                     <button
@@ -113,6 +114,7 @@ export default function ProgramStudi() {
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
                         onAddClick={openAddModal}
+                        exportFileName="program-studi-data"
                     />
                 </ComponentCard>
             </div>

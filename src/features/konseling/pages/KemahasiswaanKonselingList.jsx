@@ -7,10 +7,13 @@ import Badge from "@/components/ui/badge/Badge";
 import api from "@/api/api";
 import { Link } from "react-router";
 import Tabs from "@/components/common/Tabs";
+import DetailMahasiswaModal from "@/features/user-management/mahasiswa/components/modals/DetailMahasiswaModal";
 
 export default function KemahasiswaanKonselingList() {
     const [konselingList, setKonselingList] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("all");
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
     const statusTabs = [
         { label: "Semua", value: "all" },
@@ -18,7 +21,7 @@ export default function KemahasiswaanKonselingList() {
         { label: "Dijadwalkan Ulang", value: "dijadwalkan_ulang" },
         { label: "Berlangsung", value: "berlangsung" },
         { label: "Dibatalkan", value: "dibatalkan" },
-         { label: "Dibatalkan Otomatis", value: "dibatalkan_otomatis" },
+        { label: "Dibatalkan Otomatis", value: "dibatalkan_otomatis" },
         { label: "Selesai", value: "selesai" },
     ];
 
@@ -42,16 +45,26 @@ export default function KemahasiswaanKonselingList() {
         ? konselingList
         : konselingList.filter(k => normalizeStatus(k.status.name) === selectedStatus);
 
+    const openDetailModal = async (nrp) => {
+        try {
+            const res = await api.get(`/mahasiswa/nrp/${nrp}`);
+            const detail = res.data.data.mahasiswa;
+            setSelectedStudent(detail);
+            setIsDetailModalOpen(true);
+        } catch (error) {
+            console.error("Gagal mengambil detail mahasiswa:", error);
+        }
+    };
+
     const columns = [
         {
             key: "mahasiswa",
             title: "Nama Mahasiswa",
             sortable: true,
             render: (item) => (
-                <Link to='/kemahasiswaan-dashboard/mahasiswa'>
-                    <a className="underline hover:text-brand-500">{item.mahasiswa}</a>
-                </Link>
+                <a onClick={() => openDetailModal(item.mahasiswa.nrp)} className="underline hover:text-brand-500">{item.mahasiswa.nama}</a>
             ),
+            exportRenderer: (item) => item.mahasiswa.nama
         },
         {
             key: "konselor",
@@ -62,6 +75,7 @@ export default function KemahasiswaanKonselingList() {
                     <a className="underline hover:text-brand-500">{item.konselor}</a>
                 </Link>
             ),
+            exportRenderer: (item) => item.konselor
         },
         {
             key: "tipe_konsultasi",
@@ -73,7 +87,8 @@ export default function KemahasiswaanKonselingList() {
                     : item.tipe_konsultasi === "offline"
                         ? "Offline"
                         : "Tidak Diketahui";
-            }
+            },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -111,7 +126,8 @@ export default function KemahasiswaanKonselingList() {
                         {item.status.name}
                     </Badge>
                 </div>
-            )
+            ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -137,6 +153,12 @@ export default function KemahasiswaanKonselingList() {
                     </Badge>
                 </div>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
     ];
 
@@ -158,9 +180,16 @@ export default function KemahasiswaanKonselingList() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="konseling-data"
                     />
                 </ComponentCard>
             </div>
+            {/* Detail Mahasiswa Modal */}
+            <DetailMahasiswaModal
+                isOpen={isDetailModalOpen}
+                closeModal={() => setIsDetailModalOpen(false)}
+                mahasiswa={selectedStudent}
+            />
         </>
     );
 };
