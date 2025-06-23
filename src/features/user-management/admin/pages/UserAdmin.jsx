@@ -83,7 +83,9 @@ const Admin = () => {
                 >
                     {item.is_verified ? "Sudah Verifikasi" : "Belum Verifikasi"}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) =>
+                item.is_verified ? "Sudah Verifikasi" : "Belum Verifikasi"
         },
         {
             key: "created_at",
@@ -101,6 +103,7 @@ const Admin = () => {
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex space-x-2">
                     <button
@@ -138,10 +141,11 @@ const Admin = () => {
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
                         onAddClick={openAddModal}
+                        exportFileName="admin-data"
                     />
                 </ComponentCard>
             </div>
-            <ToastContainer/>
+            <ToastContainer />
             <AddAdminModal
                 isOpen={addModalOpen}
                 closeModal={closeAddModal}

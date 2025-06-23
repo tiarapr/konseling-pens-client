@@ -130,7 +130,8 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
                         WhatsApp
                     </a>
                 )
-            }
+            },
+            exportRenderer: (item) => item.phone_number
         },
         {
             key: "status_verifikasi",
@@ -143,11 +144,13 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
                 >
                     {item.status_verifikasi ? item.status_verifikasi.label : "Unknown Status"}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) => item.status_verifikasi.label
         },
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex flex-col space-y-2">
                     <button
@@ -185,6 +188,7 @@ export default function AdminListMahasiswaPengajuJanjiTemu() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="mahasiswa-pengaju-janji-temu-data"
                     />
                 </ComponentCard>
             </div>

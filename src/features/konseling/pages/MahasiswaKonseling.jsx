@@ -88,7 +88,8 @@ export default function MahasiswaKonseling() {
                     : item.tipe_konsultasi === "offline"
                         ? "Offline"
                         : "Tidak Diketahui";
-            }
+            },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -124,7 +125,8 @@ export default function MahasiswaKonseling() {
                 >
                     {item.status.name}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -168,7 +170,13 @@ export default function MahasiswaKonseling() {
                                 : "Belum Dikonfirmasi"}
                     </Badge>
                 );
-            }
+            },
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
     ];
 
@@ -190,6 +198,7 @@ export default function MahasiswaKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="konseling-data"
                     />
                 </ComponentCard>
             </div>

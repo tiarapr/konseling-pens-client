@@ -63,6 +63,7 @@ export default function Role() {
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex space-x-2">
                     <button
@@ -104,6 +105,7 @@ export default function Role() {
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
                         onAddClick={openAddModal}
+                        exportFileName="role-data"
                     />
                 </ComponentCard>
             </div>

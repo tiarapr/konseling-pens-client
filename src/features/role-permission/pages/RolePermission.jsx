@@ -78,6 +78,10 @@ export default function RolePermission() {
                     )}
                 </ul>
             ),
+            exportRenderer: (item) =>
+                item.permissions && item.permissions.length > 0
+                    ? item.permissions.map(p => p.permission_name).join(", ")
+                    : "No permissions",
         },
     ];
 
@@ -100,6 +104,7 @@ export default function RolePermission() {
                         defaultItemsPerPage={5}
                         addButtonText="+ Assign Permission to Role"
                         onAddClick={openAddModal}
+                        exportFileName="role-permission-data"
                     />
                 </ComponentCard>
             </div>

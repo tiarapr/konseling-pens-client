@@ -4,13 +4,13 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";
 import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
-import { useModal } from "@/hooks/useModal";
-import api from "@/api/api";
-import { toast } from "react-toastify";
 import SetJadwalModal from "@/features/konseling/components/modals/SetJadwalModal";
 import AlasanPenolakanModal from "../components/modals/AlasanPenolakanModal";
-import { Link } from "react-router";
+import DetailMahasiswaModal from "@/features/user-management/mahasiswa/components/modals/DetailMahasiswaModal";
 import Tabs from "@/components/common/Tabs";
+import api from "@/api/api";
+import { useModal } from "@/hooks/useModal";
+import { toast } from "react-toastify";
 
 export default function AdminManajemenJanjiTemu() {
     const [janjiTemuList, setJanjiTemuList] = useState([]);
@@ -21,6 +21,8 @@ export default function AdminManajemenJanjiTemu() {
     const [selectedJanjiTemu, setSelectedJanjiTemu] = useState(null);
     const [janjiTemuToReject, setJanjiTemuToReject] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("all");
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
     const statusTabs = [
         { label: "Semua", value: "all" },
@@ -69,6 +71,17 @@ export default function AdminManajemenJanjiTemu() {
         fetchKonselors();
         fetchKonseling();
     }, []);
+    
+    const openDetailModal = async (nrp) => {
+        try {
+            const res = await api.get(`/mahasiswa/nrp/${nrp}`);
+            const detail = res.data.data.mahasiswa;
+            setSelectedStudent(detail);
+            setIsDetailModalOpen(true);
+        } catch (error) {
+            console.error("Gagal mengambil detail mahasiswa:", error);
+        }
+    };
 
     const updateStatus = async (id, status, alasan_penolakan = null) => {
         try {
@@ -138,10 +151,9 @@ export default function AdminManajemenJanjiTemu() {
             title: "Nama Mahasiswa",
             sortable: true,
             render: (item) => (
-                <Link to='/admin-dashboard/mahasiswa'>
-                    <a className="underline hover:text-brand-500">{item.nama_mahasiswa}</a>
-                </Link>
+                <a onClick={() => openDetailModal(item.nrp)} className="underline hover:text-brand-500">{item.nama_mahasiswa}</a>
             ),
+            exportRenderer: (item) => item.nama_mahasiswa
         },
         {
             key: "nrp",
@@ -161,7 +173,8 @@ export default function AdminManajemenJanjiTemu() {
                         WhatsApp
                     </a>
                 )
-            }
+            },
+            exportRenderer: (item) => item.phone_number
         },
         {
             key: "tipe_konsultasi",
@@ -170,6 +183,12 @@ export default function AdminManajemenJanjiTemu() {
             render: (item) => (
                 <span className="capitalize">{item.tipe_konsultasi}</span>
             ),
+            exportRenderer: (item) => item.tipe_konsultasi
+        },
+        {
+            key: "nama_konselor",
+            title: "Konselor",
+            sortable: true,
         },
         {
             key: "jadwal_utama_tanggal",
@@ -198,9 +217,17 @@ export default function AdminManajemenJanjiTemu() {
             }
         },
         {
-            key: "nama_konselor",
-            title: "Konselor",
+            key: "tanggal_pengajuan",
+            title: "Tanggal Pengajuan",
             sortable: true,
+            render: (item) => {
+                const tanggal = new Date(item.tanggal_pengajuan).toLocaleDateString("id-ID", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                });
+                return `${tanggal}`;
+            }
         },
         {
             key: "status",
@@ -221,11 +248,13 @@ export default function AdminManajemenJanjiTemu() {
                 >
                     {item.status}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) => item.status
         },
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => {
                 if (item.status === "menunggu_konfirmasi") {
                     return (
@@ -293,9 +322,15 @@ export default function AdminManajemenJanjiTemu() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="janji-temu-data"
                     />
                 </ComponentCard>
             </div>
+            <DetailMahasiswaModal
+                isOpen={isDetailModalOpen}
+                closeModal={() => setIsDetailModalOpen(false)}
+                mahasiswa={selectedStudent}
+            />
             <SetJadwalModal
                 isOpen={isOpen}
                 closeModal={closeModal}

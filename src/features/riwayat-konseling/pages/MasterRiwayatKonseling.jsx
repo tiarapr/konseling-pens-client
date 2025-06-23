@@ -52,7 +52,7 @@ export default function MasterRiwayatKonseling() {
 
     const columns = [
         {
-            key: "mahasiswa",
+            key: "mahasiswa.nama",
             title: "Nama Mahasiswa",
             sortable: true,
         },
@@ -72,6 +72,7 @@ export default function MasterRiwayatKonseling() {
                         ? "Offline"
                         : "Tidak Diketahui";
             },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -105,6 +106,7 @@ export default function MasterRiwayatKonseling() {
                     {item.status.name}
                 </Badge>
             ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -128,15 +130,22 @@ export default function MasterRiwayatKonseling() {
                             : "Belum Dikonfirmasi"}
                 </Badge>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
         {
             key: "catatan_konseling",
             title: "Catatan Konseling",
+            excludeFromExport: true,
             render: (item) => {
                 const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id);
                 return catatan ? (
                     <Link to={`/master-dashboard/catatan-konseling/${catatan.id}`}>
-                       <span className="text-brand-500 underline">Detail</span>
+                        <span className="text-brand-500 underline">Detail</span>
                     </Link>
                 ) : (
                     <span>Catatan tidak tersedia</span>
@@ -172,6 +181,10 @@ export default function MasterRiwayatKonseling() {
                         Beri Rating
                     </button>
                 ),
+            exportRenderer: (item) =>
+                item.rating && typeof item.rating.nilai === "number"
+                    ? `${item.rating.nilai} / 5`
+                    : "Belum ada rating"
         },
 
     ];
@@ -193,6 +206,7 @@ export default function MasterRiwayatKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="riwayat-konseling-data"
                     />
                 </ComponentCard>
             </div>

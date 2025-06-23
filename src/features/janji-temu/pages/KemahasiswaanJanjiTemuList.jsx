@@ -4,6 +4,7 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PageMeta from "@/components/common/PageMeta";
 import DataTable from "@/components/tables/DataTables/DataTable";
 import Badge from "@/components/ui/badge/Badge";
+import DetailMahasiswaModal from "@/features/user-management/mahasiswa/components/modals/DetailMahasiswaModal";
 import api from "@/api/api";
 import Tabs from "@/components/common/Tabs";
 import { Link } from "react-router";
@@ -11,6 +12,8 @@ import { Link } from "react-router";
 export default function KemahasiswaanJanjiTemuList() {
     const [janjiTemuList, setJanjiTemuList] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("all");
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
     const statusTabs = [
         { label: "Semua", value: "all" },
@@ -33,6 +36,18 @@ export default function KemahasiswaanJanjiTemuList() {
         fetchJanjiTemu();
     }, []);
 
+
+    const openDetailModal = async (nrp) => {
+        try {
+            const res = await api.get(`/mahasiswa/nrp/${nrp}`);
+            const detail = res.data.data.mahasiswa;
+            setSelectedStudent(detail);
+            setIsDetailModalOpen(true);
+        } catch (error) {
+            console.error("Gagal mengambil detail mahasiswa:", error);
+        }
+    };
+
     const filteredData = selectedStatus === "all"
         ? janjiTemuList
         : janjiTemuList.filter(j => j.status === selectedStatus);
@@ -48,10 +63,9 @@ export default function KemahasiswaanJanjiTemuList() {
             title: "Nama Mahasiswa",
             sortable: true,
             render: (item) => (
-                <Link to='/kemahasiswaan-dashboard/mahasiswa'>
-                    <a className="underline hover:text-brand-500">{item.nama_mahasiswa}</a>
-                </Link>
+                <a onClick={() => openDetailModal(item.nrp)} className="underline hover:text-brand-500">{item.nama_mahasiswa}</a>
             ),
+            exportRenderer: (item) => item.nama_mahasiswa
         },
         {
             key: "nrp",
@@ -71,7 +85,8 @@ export default function KemahasiswaanJanjiTemuList() {
                         WhatsApp
                     </a>
                 )
-            }
+            },
+            exportRenderer: (item) => item.phone_number
         },
         {
             key: "tipe_konsultasi",
@@ -80,6 +95,12 @@ export default function KemahasiswaanJanjiTemuList() {
             render: (item) => (
                 <span className="capitalize">{item.tipe_konsultasi}</span>
             ),
+            exportRenderer: (item) => item.tipe_konsultasi
+        },
+        {
+            key: "nama_konselor",
+            title: "Konselor",
+            sortable: true,
         },
         {
             key: "jadwal_utama_tanggal",
@@ -108,9 +129,17 @@ export default function KemahasiswaanJanjiTemuList() {
             }
         },
         {
-            key: "nama_konselor",
-            title: "Konselor",
+            key: "tanggal_pengajuan",
+            title: "Tanggal Pengajuan",
             sortable: true,
+            render: (item) => {
+                const tanggal = new Date(item.tanggal_pengajuan).toLocaleDateString("id-ID", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                });
+                return `${tanggal}`;
+            }
         },
         {
             key: "status",
@@ -131,7 +160,8 @@ export default function KemahasiswaanJanjiTemuList() {
                 >
                     {item.status}
                 </Badge>
-            )
+            ),
+            exportRenderer: (item) => item.status
         },
         {
             key: "alasan_penolakan",
@@ -145,7 +175,8 @@ export default function KemahasiswaanJanjiTemuList() {
                         <span className="text-gray-400 italic">Tidak ada alasan penolakan</span>
                     )}
                 </div>
-            )
+            ),
+            exportRenderer: (item) => item.alasan_penolakan
         }
     ];
 
@@ -167,9 +198,15 @@ export default function KemahasiswaanJanjiTemuList() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="janji-temu-data"
                     />
                 </ComponentCard>
             </div>
+            <DetailMahasiswaModal
+                isOpen={isDetailModalOpen}
+                closeModal={() => setIsDetailModalOpen(false)}
+                mahasiswa={selectedStudent}
+            />
         </>
     );
 };

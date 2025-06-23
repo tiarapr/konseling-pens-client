@@ -34,7 +34,7 @@ export default function AdminRiwayatKonseling() {
 
     const columns = [
         {
-            key: "mahasiswa",
+            key: "mahasiswa.nama",
             title: "Nama Mahasiswa",
             sortable: true,
         },
@@ -54,6 +54,7 @@ export default function AdminRiwayatKonseling() {
                         ? "Offline"
                         : "Tidak Diketahui";
             },
+            exportRenderer: (item) => item.tipe_konsultasi
         },
         {
             key: "tanggal_konseling",
@@ -87,6 +88,7 @@ export default function AdminRiwayatKonseling() {
                     {item.status.name}
                 </Badge>
             ),
+            exportRenderer: (item) => item.status.name
         },
         {
             key: "status_kehadiran",
@@ -110,6 +112,12 @@ export default function AdminRiwayatKonseling() {
                             : "Belum Dikonfirmasi"}
                 </Badge>
             ),
+            exportRenderer: (item) =>
+                item.status_kehadiran === true
+                    ? "Hadir"
+                    : item.status_kehadiran === false
+                        ? "Tidak Hadir"
+                        : "Belum Dikonfirmasi"
         },
         {
             key: "rating",
@@ -131,7 +139,11 @@ export default function AdminRiwayatKonseling() {
                     </div>
                 ) : (
                     <span className="text-gray-400">Belum ada rating</span>
-                )
+                ),
+            exportRenderer: (item) =>
+                item.rating && typeof item.rating.nilai === "number"
+                    ? `${item.rating.nilai} / 5`
+                    : "Belum ada rating"
         },
 
     ];
@@ -153,6 +165,7 @@ export default function AdminRiwayatKonseling() {
                         pagination={true}
                         itemsPerPageOptions={[5, 10, 20, 50]}
                         defaultItemsPerPage={5}
+                        exportFileName="riwayat-konseling-data"
                     />
                 </ComponentCard>
             </div>
