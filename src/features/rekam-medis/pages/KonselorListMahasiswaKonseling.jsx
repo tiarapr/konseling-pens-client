@@ -58,6 +58,7 @@ export default function KonselorListMahasiswaKonseling() {
         {
             key: "action",
             title: "Action",
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex flex-col space-y-2">
                     <Link to={`/konselor-dashboard/mahasiswa/${item.nrp}/rekam-medis`}>

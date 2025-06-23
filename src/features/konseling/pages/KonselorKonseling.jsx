@@ -171,7 +171,7 @@ export default function KonselorKonseling() {
         {
             key: "aksi",
             title: "Aksi",
-            excluedeFromExport: true,
+            excludeFromExport: true,
             render: (item) => (
                 <div className="flex flex-col w-full space-x-2 gap-3">
                     <button
