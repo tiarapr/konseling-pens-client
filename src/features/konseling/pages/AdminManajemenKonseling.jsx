@@ -9,6 +9,7 @@ import UpdateStatusModal from "../components/modals/UpdateStatusModal";
 import { Link } from "react-router";
 import Tabs from "@/components/common/Tabs";
 import RescheduleModal from "../components/modals/RescheduleModal";
+import DetailMahasiswaModal from "@/features/user-management/mahasiswa/components/modals/DetailMahasiswaModal";
 
 export default function AdminManajemenKonseling() {
     const [konselingList, setKonselingList] = useState([]);
