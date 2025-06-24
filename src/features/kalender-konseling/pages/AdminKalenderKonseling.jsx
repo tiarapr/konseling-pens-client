@@ -38,7 +38,7 @@ export default function AdminKalenderKonseling() {
 
       return {
         id: k.id,
-        title: `${k.mahasiswa}`,
+        title: `${k.mahasiswa.nama}`,
         start: start.toISOString(),
         end: end.toISOString(),
         extendedProps: {
