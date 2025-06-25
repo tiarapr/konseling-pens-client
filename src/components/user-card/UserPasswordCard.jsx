@@ -69,7 +69,7 @@ export default function UserPasswordCard() {
           </h4>
           {!isEditing ? (
             <p className="text-sm text-gray-400 dark:text-white/90">
-              Strengthen your account by ensuring your password is strong
+              Perkuat akun Anda dengan memastikan kata sandi Anda kuat
             </p>
           ) : (
             <form
