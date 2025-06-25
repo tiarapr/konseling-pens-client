@@ -147,7 +147,7 @@ export default function MahasiswaRiwayatKonseling() {
                 const catatan = catatanList.find((cat) => cat && cat.konseling_id === item.id);
                 return catatan ? (
                     <Link to={`/dashboard/catatan-konseling/${catatan.id}`}>
-                        Detail
+                        <span className="text-brand-500 underline">Detail</span>
                     </Link>
                 ) : (
                     <span className="text-gray-400">Catatan tidak tersedia</span>
