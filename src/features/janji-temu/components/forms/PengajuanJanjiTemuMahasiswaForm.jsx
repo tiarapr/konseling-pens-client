@@ -222,7 +222,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
             <form onSubmit={handleSubmit} className="flex flex-col space-y-4 gap-4">
                 <div>
                     <Label>NRP Mahasiswa</Label>
-                    <Input type="text" value={nrp} readOnly />
+                    <Input type="text" value={nrp} disabled />
                 </div>
 
                 <div>
@@ -291,7 +291,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
                                 value={formData.jadwal_utama_jam_selesai}
                                 onChange={handleChange}
                                 required
-                                readOnly
+                                disabled
                                 className="bg-gray-100 dark:bg-gray-700"
                             />
                         </div>
@@ -345,7 +345,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
                                 name="jadwal_alternatif_jam_selesai"
                                 value={formData.jadwal_alternatif_jam_selesai}
                                 onChange={handleChange}
-                                readOnly
+                                disabled
                                 required
                                 className="bg-gray-100 dark:bg-gray-700"
                             />
