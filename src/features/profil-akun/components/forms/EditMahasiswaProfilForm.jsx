@@ -136,7 +136,7 @@ export default function EditMahasiswaProfilForm() {
         } catch (error) {
             console.error(error);
             const message =
-                error.response?.data?.message || "Something went wrong during update.";
+                error.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi during update.";
             toast.error(message);
         } finally {
             setIsSubmitting(false);

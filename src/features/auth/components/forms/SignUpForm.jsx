@@ -3,22 +3,21 @@ import { Link } from "react-router-dom";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
-import Checkbox from "@/components/form/input/Checkbox";
 import Radio from "@/components/form/input/Radio";
 import Select from "@/components/form/Select";
 import DatePicker from "@/components/form/date-picker";
 import FileInput from "@/components/form/input/FileInput";
 import api from "@/api/api";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState("");
   const [studyProgram, setStudyProgram] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [programOptions, setProgramOptions] = useState([]);
+  const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
     const fetchPrograms = async () => {
@@ -30,8 +29,8 @@ export default function SignUpForm() {
         }));
         setProgramOptions(options);
       } catch (error) {
-        console.error("Failed to fetch study programs:", error.message);
-        toast.error("Failed to load study programs. Please try again later.");
+        console.error("Gagal memuat program studi:", error.message);
+        setFetchError("Gagal memuat daftar program studi.");
       }
     };
 
@@ -48,7 +47,7 @@ export default function SignUpForm() {
 
       const ktmFile = form.ktm_url.files[0];
       if (ktmFile && ktmFile.size > 2 * 1024 * 1024) {
-        toast.error("File size should not exceed 2MB.");
+        Swal.fire("Error", "Ukuran file tidak boleh lebih dari 2MB.", "error");
         setIsSubmitting(false);
         return;
       }
@@ -64,14 +63,12 @@ export default function SignUpForm() {
       formData.append("ktm_url", ktmFile);
 
       const response = await api.post("/mahasiswa", formData);
-      console.log("Registration response:", response.data);
 
-      toast.success(response.data.message || "Registration successful");
+      Swal.fire("Sukses", response.data.message || "Pendaftaran berhasil!", "success");
     } catch (error) {
-      console.error(error);
       const message =
-        error.response?.data?.message || "Something went wrong during registration.";
-      toast.error(message);
+        error.response?.data?.message || "Terjadi kesalahan saat mendaftar.";
+      Swal.fire("Gagal", message, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -86,42 +83,40 @@ export default function SignUpForm() {
             className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             <ChevronLeftIcon className="size-5" />
-            Back to homepage
+            Kembali ke Beranda
           </Link>
         </div>
 
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              Sign Up
+              Daftar Akun
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your details to create an account.
+              Masukkan data diri untuk membuat akun.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {/* Full Name */}
               <div className="sm:col-span-2">
                 <Label htmlFor="nama_lengkap">
-                  Full Name<span className="text-error-500">*</span>
+                  Nama Lengkap<span className="text-error-500">*</span>
                 </Label>
                 <Input
                   type="text"
                   id="nama_lengkap"
                   name="nama_lengkap"
-                  placeholder="Enter your full name"
+                  placeholder="Masukkan nama lengkap"
                   required
                   minLength={3}
                   maxLength={100}
                 />
               </div>
 
-              {/* Email */}
-              <div className="sm:col-span-1">
+              <div className="sm:col-span-2">
                 <Label htmlFor="email">
-                  NET ID<span className="text-error-500">*</span>
+                  Email PENS<span className="text-error-500">*</span>
                 </Label>
                 <Input
                   type="email"
@@ -129,32 +124,29 @@ export default function SignUpForm() {
                   name="email"
                   placeholder="user@it.student.pens.ac.id"
                   required
-                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                  title="Please enter a valid email address"
                 />
               </div>
 
-              {/* Password */}
-              <div className="sm:col-span-1">
+              <div className="sm:col-span-2">
                 <Label htmlFor="password">
-                  Password<span className="text-error-500">*</span>
+                  Kata Sandi<span className="text-error-500">*</span>
                 </Label>
                 <div className="relative">
                   <Input
-                    placeholder="At least 8 characters, including uppercase, lowercase, and numbers"
+                    placeholder="Minimal 8 karakter, huruf besar, kecil & angka"
                     type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
                     required
                     minLength={8}
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$"
-                    title="Password must contain at least 8 characters, including uppercase, lowercase, and numbers"
+                    title="Password minimal 8 karakter, termasuk huruf besar, kecil, dan angka"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute z-30 -translate-y-1/2 right-4 top-1/2"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
                   >
                     {showPassword ? (
                       <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -165,10 +157,9 @@ export default function SignUpForm() {
                 </div>
               </div>
 
-              {/* Phone Number */}
               <div className="sm:col-span-1">
                 <Label htmlFor="phoneNumber">
-                  Phone Number<span className="text-error-500">*</span>
+                  No. WhatsApp<span className="text-error-500">*</span>
                 </Label>
                 <Input
                   type="tel"
@@ -176,12 +167,9 @@ export default function SignUpForm() {
                   name="phoneNumber"
                   placeholder="628812345678"
                   required
-                  pattern="[0-9]{10,15}"
-                  title="Phone number must be between 10-15 digits"
                 />
               </div>
 
-              {/* NRP */}
               <div className="sm:col-span-1">
                 <Label htmlFor="nrp">
                   NRP<span className="text-error-500">*</span>
@@ -190,51 +178,47 @@ export default function SignUpForm() {
                   type="text"
                   id="nrp"
                   name="nrp"
-                  placeholder="Enter your NRP (10 digits)"
+                  placeholder="Masukkan NRP (10 digit)"
                   required
-                  pattern="[0-9]{10}"
-                  title="NRP must be exactly 10 digits"
                 />
               </div>
 
-              {/* Study Program */}
               <div className="sm:col-span-2">
                 <Label htmlFor="studyProgram">
-                  Study Program<span className="text-error-500">*</span>
+                  Program Studi<span className="text-error-500">*</span>
                 </Label>
                 <Select
                   id="studyProgram"
                   options={programOptions}
-                  placeholder="Select your study program"
+                  placeholder="Pilih program studi"
                   required
                   onChange={(value) => setStudyProgram(value)}
                 />
+                {fetchError && (
+                  <p className="mt-2 text-sm text-red-500">{fetchError}</p>
+                )}
               </div>
 
-              {/* Birth Date */}
               <div className="sm:col-span-2">
                 <DatePicker
                   id="date-picker"
-                  label="Birth Date"
-                  placeholder="Select your birth date"
+                  label="Tanggal Lahir"
+                  placeholder="Pilih tanggal lahir"
                   onChange={(dateStr) => setBirthDate(dateStr)}
                   required
                   maxDate={new Date().toISOString().split('T')[0]}
                 />
               </div>
 
-              {/* Gender */}
               <div className="sm:col-span-2">
-                <Label>
-                  Gender<span className="text-error-500">*</span>
-                </Label>
+                <Label>Jenis Kelamin<span className="text-error-500">*</span></Label>
                 <div className="flex gap-4 mt-2">
                   <Radio
                     name="gender"
                     value="male"
                     checked={gender === "male"}
                     onChange={() => setGender("male")}
-                    label="Male"
+                    label="Laki-laki"
                     required
                   />
                   <Radio
@@ -242,65 +226,46 @@ export default function SignUpForm() {
                     value="female"
                     checked={gender === "female"}
                     onChange={() => setGender("female")}
-                    label="Female"
+                    label="Perempuan"
                   />
                 </div>
               </div>
 
-              {/* KTM Upload */}
+              {/* Upload KTM */}
               <div className="sm:col-span-2">
                 <Label htmlFor="ktm_url">
-                  Upload Student Card (KTM)<span className="text-error-500">*</span>
+                  Unggah KTM<span className="text-error-500">*</span>
                 </Label>
                 <FileInput
                   id="ktm_url"
                   name="ktm_url"
                   accept="image/jpeg, image/png, image/jpg"
                   required
-                  helperText="Upload your student card (JPG or PNG, max 2MB)"
+                  helperText="Unggah kartu tanda mahasiswa (JPG/PNG, maks 2MB)"
                 />
               </div>
             </div>
 
-            {/* Terms and Conditions */}
-            <div className="flex items-start gap-3">
-              <Checkbox
-                className="w-5 h-5 mt-1"
-                checked={isChecked}
-                onChange={setIsChecked}
-                id="terms"
-                required
-              />
-              <label htmlFor="terms" className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                By completing this form, you agree to our{" "}
-                <Link to="/terms" className="text-brand-500 hover:underline">
-                  Terms and Conditions
-                </Link>, and our{" "}
-                <Link to="/privacy" className="text-brand-500 hover:underline">
-                  Privacy Policy
-                </Link>
-              </label>
-            </div>
-
-            {/* Submit Button */}
+            {/* Tombol Submit */}
             <div>
               <button
                 type="submit"
                 className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting || !isChecked}
+                disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Sign Up"}
+                {isSubmitting ? "Mengirim..." : "Daftar"}
               </button>
             </div>
 
+            {/* Link Login */}
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Already have an account?{" "}
+                Sudah punya akun?{" "}
                 <Link
                   to="/signin"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
-                  Sign In
+                  Masuk
                 </Link>
               </p>
             </div>

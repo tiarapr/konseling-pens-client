@@ -6,6 +6,7 @@ import Select from "@/components/form/Select";
 import api from "@/api/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 export default function PengajuanJanjiTemuMahasiswaForm() {
     const [nrp, setNrp] = useState("");
@@ -204,7 +205,7 @@ export default function PengajuanJanjiTemuMahasiswaForm() {
             const payload = { nrp, ...formData };
             await api.post("/janji-temu", payload);
 
-            toast.success("Janji temu berhasil diajukan!");
+            Swal.fire("Berhasil", "Janji temu berhasil diajukan!", "success");
             navigate("/dashboard/janji-temu");
         } catch (err) {
             setError(err.response?.data?.message || "Gagal mengajukan janji temu");

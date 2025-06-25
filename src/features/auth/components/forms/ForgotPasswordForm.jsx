@@ -29,7 +29,7 @@ export default function ForgotPasswordForm() {
             if (data.status === "success") {
                 // Show SweetAlert notification
                 Swal.fire({
-                    title: "Success!",
+                    title: "Sukses!",
                     text: data.message,
                     icon: "success",
                     confirmButtonText: "OK"
@@ -38,10 +38,10 @@ export default function ForgotPasswordForm() {
                 // Reset the email input field after success
                 setEmail("");
             } else {
-                setError("Failed to send reset instructions. Please try again.");
+                setError("Gagal mengirim instruksi pengaturan ulang. Silakan coba lagi.");
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Something went wrong.");
+            setError(err.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.");
         } finally {
             setLoading(false);
         }
@@ -56,16 +56,16 @@ export default function ForgotPasswordForm() {
                         className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                     >
                         <ChevronLeftIcon className="size-5" />
-                        Back to Sign In
+                        Kembali ke halaman login
                     </Link>
                 </div>
                 <div>
                     <div className="mb-5 sm:mb-8">
                         <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-                            Forgot Password
+                            Lupa Password
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Enter your email address to receive a password reset link.
+                            Masukkan alamat email Anda untuk menerima tautan pengaturan ulang kata sandi.
                         </p>
                     </div>
                     <form onSubmit={handleSubmit}>
@@ -74,7 +74,7 @@ export default function ForgotPasswordForm() {
                                 <Label>Email <span className="text-error-500">*</span></Label>
                                 <Input
                                     type="email"
-                                    placeholder="youremail@example.com"
+                                    placeholder="user@mail.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -83,7 +83,7 @@ export default function ForgotPasswordForm() {
                             {message && <p className="text-sm text-green-600">{message}</p>}
                             <div>
                                 <Button className="w-full" size="sm" type="submit" disabled={loading}>
-                                    {loading ? "Sending..." : "Send Reset Link"}
+                                    {loading ? "Sending..." : "Kirim Tautan Reset"}
                                 </Button>
                             </div>
                         </div>
