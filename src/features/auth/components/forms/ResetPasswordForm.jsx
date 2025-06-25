@@ -41,7 +41,7 @@ export default function ResetPasswordForm() {
             if (data.status === "success") {
                 // Show success SweetAlert
                 Swal.fire({
-                    title: "Success!",
+                    title: "Sukses!",
                     text: data.message,
                     icon: "success",
                     confirmButtonText: "OK"
@@ -58,7 +58,7 @@ export default function ResetPasswordForm() {
                 // Show error SweetAlert
                 Swal.fire({
                     title: "Error",
-                    text: "Failed to reset password. Please try again.",
+                    text: "Gagal mengatur ulang kata sandi. Silakan coba lagi.",
                     icon: "error",
                     confirmButtonText: "OK"
                 });
@@ -67,7 +67,7 @@ export default function ResetPasswordForm() {
             // Show error SweetAlert on failure
             Swal.fire({
                 title: "Error",
-                text: err.response?.data?.message || "Something went wrong.",
+                text: err.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.",
                 icon: "error",
                 confirmButtonText: "OK"
             });

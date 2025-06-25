@@ -5,6 +5,8 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import api from "@/api/api";
+import Swal from "sweetalert2";
+import Alert from "@/components/ui/alert/Alert";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,37 +14,30 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-      setError("Email and password are required");
+      setError("Email dan kata sandi wajib diisi.");
       return;
     }
 
     setLoading(true);
     setError("");
-    setMessage("");
 
     try {
-      const response = await api.post("/authentication", {
-        email,
-        password,
-      });
-
+      const response = await api.post("/authentication", { email, password });
       const data = response.data;
 
       if (data.status === "success") {
-        setMessage(data.message);
         navigate("/otp", { state: { email } });
       } else {
-        setError(data.message || "Login failed. Please try again.");
+        Swal.fire("Gagal", data.message || "Login gagal. Silakan coba lagi.", "error");
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Something went wrong. Please try again.";
+      const errorMessage = err.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -58,34 +53,47 @@ export default function SignInForm() {
             className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           >
             <ChevronLeftIcon className="size-5" />
-            Back to homepage
+            Kembali ke Beranda
           </Link>
         </div>
+
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              Sign In
+              Masuk Akun
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your email and password to sign in!
+              Masukkan email dan kata sandi Anda untuk masuk.
             </p>
           </div>
+
+          {error && (
+            <div className="text-sm mb-6">
+              <Alert variant="error" title={error} />
+            </div>
+          )}
+
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div>
-                <Label>Email <span className="text-error-500">*</span></Label>
+                <Label>
+                  Email <span className="text-error-500">*</span>
+                </Label>
                 <Input
-                  placeholder="info@gmail.com"
+                  placeholder="user@mail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+
               <div>
-                <Label>Password <span className="text-error-500">*</span></Label>
+                <Label>
+                  Kata Sandi <span className="text-error-500">*</span>
+                </Label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder="Masukkan kata sandi"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -101,44 +109,46 @@ export default function SignInForm() {
                   </span>
                 </div>
               </div>
+
               <div>
                 <Link
                   to="/forgot-password"
                   className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
-                  Forgot password?
+                  Lupa kata sandi?
                 </Link>
               </div>
+
               {error && (
-                <div className="text-sm text-red-600">
-                  <p>{error}</p>
-                  {error.includes("Please verify your email address first") && (
-                    <p className="mt-1">
-                      Need a new verification email?{" "}
+                <div className="text-sm">
+                  {error.includes("Verifikasi email anda terlebih dahulu untuk mengaktifkan akun.") && (
+                    <p className="mt-2 text-gray-600">
+                      Belum menerima email verifikasi?{" "}
                       <Link
                         to="/resend-verification-email"
                         state={{ email }}
                         className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                       >
-                        Click here to resend
+                        Klik di sini untuk kirim ulang
                       </Link>
                     </p>
                   )}
                 </div>
               )}
-              {message && <p className="text-sm text-green-600">{message}</p>}
+
               <div>
                 <Button className="w-full" size="sm" type="submit" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign in"}
+                  {loading ? "Memproses..." : "Masuk"}
                 </Button>
               </div>
             </div>
           </form>
+
           <div className="mt-5">
             <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-              Don&apos;t have an account?{" "}
+              Belum punya akun?{" "}
               <Link to="/signup" className="text-brand-500 hover:text-brand-600 dark:text-brand-400">
-                Sign Up
+                Daftar
               </Link>
             </p>
           </div>

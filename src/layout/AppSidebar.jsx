@@ -86,7 +86,7 @@ const menuItemsByRole = {
             ],
         },
         {
-            name: "Setting Account",
+            name: "Pengaturan Akun",
             icon: <UserIcon />,
             path: "/dashboard/setting/account",
         },
@@ -122,7 +122,7 @@ const menuItemsByRole = {
             path: "/admin-dashboard/konselor",
         },
         {
-            name: "My Profile",
+            name: "Profil Saya",
             icon: <UserIcon />,
             path: "/admin-dashboard/profile",
         },
@@ -148,7 +148,7 @@ const menuItemsByRole = {
             ],
         },
         {
-            name: "My Profile",
+            name: "Profil Saya",
             icon: <UserIcon />,
             path: "/konselor-dashboard/profile",
         },
@@ -185,7 +185,7 @@ const menuItemsByRole = {
             ],
         },
         {
-            name: "My Profile",
+            name: "Profil Saya",
             icon: <UserIcon />,
             path: "/kemahasiswaan-dashboard/profile",
         },
