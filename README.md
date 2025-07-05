@@ -1,12 +1,79 @@
-# React + Vite
+# 🎓 E-Konseling PENS – Frontend Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the **frontend** application for the **E-Konseling PENS** platform. 
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚙️ Tech Stack
 
-## Expanding the ESLint configuration
+- ⚛️ **React** – Frontend UI Library  
+- ⚡ **Vite** – Lightning-fast build tool  
+- 🎨 **Tailwind CSS** – Utility-first CSS framework  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+> ⚠️ This project uses UI elements adapted from [TailAdmin]
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file (or rename `.env-example`) in the root directory and configure the following:
+
+```env
+VITE_BASIC_AUTH_USERNAME=yourUsername
+VITE_BASIC_AUTH_PASSWORD=yourPassword
+
+VITE_API_BASE_URL=https://your-api-domain.com
+````
+
+These variables are accessible in your code via `import.meta.env`.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/tiarapr/konseling-pens-web
+cd konseling-pens-web
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# or
+yarn
+```
+
+### 3. Run the App in Development
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The app will be available at:
+[http://localhost:5173](http://localhost:5173)
+
+### 4. Build for Production
+
+```bash
+npm run build
+```
+
+### 5. Preview Production Build
+
+```bash
+npm run preview
+```
+
+---
+
+## 📌 Notes
+
+For the backend and API documentation, see the [E-Konseling PENS Backend Repository](https://github.com/tiarapr/konseling-pens-server).
+
+```
+
