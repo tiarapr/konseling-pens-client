@@ -15,7 +15,19 @@ createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <AppWrapper>
           <App />
-          <ToastContainer />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            style={{ zIndex: 999999 }}
+          />
         </AppWrapper>
       </AuthProvider>
     </ThemeProvider>
