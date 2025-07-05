@@ -34,7 +34,7 @@ These variables are accessible in your code via `import.meta.env`.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tiarapr/konseling-pens-web
+git clone https://github.com/tiarapr/konseling-pens-client
 cd konseling-pens-web
 ```
 
