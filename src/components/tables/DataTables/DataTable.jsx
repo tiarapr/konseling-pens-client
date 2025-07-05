@@ -12,7 +12,6 @@ const DataTable = ({
   defaultSort = { key: "", direction: "asc" },
   searchable = true,
   pagination = true,
-  itemsPerPageOptions = [5, 10, 20, 50],
   defaultItemsPerPage = 5,
   onAddClick,
   addButtonText = "+ Tambah Data",
@@ -72,10 +71,10 @@ const DataTable = ({
             <LimitSelector
               itemsPerPage={itemsPerPage}
               onChange={(value) => {
-                setItemsPerPage(Number(value));
+                const val = Math.max(1, Math.min(Number(value), 100));
+                setItemsPerPage(val);
                 setCurrentPage(1);
               }}
-              options={itemsPerPageOptions}
             />
           )}
         </div>
