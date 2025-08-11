@@ -21,8 +21,8 @@ const AlasanPenolakanModal = ({
         }
     }, [isOpen]);
 
-    const handleTextAreaChange = (value) => {
-        setAlasanPenolakan(value);
+    const handleTextAreaChange = (e) => {
+        setAlasanPenolakan(e.target.value);
     };
 
     const handleSubmit = async () => {
