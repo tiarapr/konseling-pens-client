@@ -11,7 +11,7 @@ export default function HeroSection() {
                         <h1 className="text-brand-500 text-title-md lg:text-title-md font-bold mb-6 leading-tight">
                             Kami siap mendengarkan ceritamu.
                         </h1>
-                        <p className="text-gray-500 text-theme-sm mb-6 max-w-lg">
+                        <p className="text-gray-500 text-theme-lg mb-6 max-w-xl">
                             Ceritakan kepada kami dan dapatkan bimbingan serta dukungan profesional melalui layanan konseling online maupun offline yang mudah diakses dan nyaman. Kami siap membantu Anda dalam menghadapi tantangan akademik, pribadi, maupun karir.
                         </p>
                         <a
