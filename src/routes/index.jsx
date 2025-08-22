@@ -1,63 +1,67 @@
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
-import Homepage from '../pages/Homepage/Homepage';
-import SignIn from "../pages/AuthPages/SignIn";
-import SignUp from "../pages/AuthPages/SignUp";
-import OtpVerification from "../pages/AuthPages/OTPVerification";
-import ForgotPassword from "../pages/AuthPages/ForgotPassword";
-import ResetPassword from "../pages/AuthPages/ResetPassword";
-import ResendVerificationEmail from "../pages/AuthPages/ResendVerificationEmail";
-import AppLayout from '../layout/AppLayout';
-import Dashboard from "../pages/DashboardHomepage/Dashboard";
-import VerifyEmailPage from '../pages/AuthPages/VerifyEmail';
-import JanjiTemu from "../pages/MasterDashboard/JanjiTemu/JanjiTemu";
-import Konseling from "../pages/MasterDashboard/Konseling/Konseling";
-import Calendar from "../pages/MasterDashboard/Konseling/Calendar";
-import CatatanKonseling from "../pages/MasterDashboard/CatatanKonseling/CatatanKonseling";
-import RiwayatKonseling from "../pages/MasterDashboard/Konseling/RiwayatKonseling";
-import DetailCatatanKonseling from "../pages/MasterDashboard/CatatanKonseling/DetailCatatanKonseling";
-import Role from "../pages/MasterDashboard/RolePermission/Role";
-import RolePermission from "../pages/MasterDashboard/RolePermission/RolePermission";
-import Permission from "../pages/MasterDashboard/RolePermission/Permission";
-import Department from "../pages/UniversityData/Departement";
-import ProgramStudi from "../pages/UniversityData/ProgramStudi";
-import Mahasiswa from "../pages/UserManagement/UserMahasiswa";
-import Admin from "../pages/UserManagement/UserAdmin";
-import Konselor from "../pages/UserManagement/UserKonselor";
-import Kemahasiswaan from "../pages/UserManagement/UserKemahasiswaan";
-import MasterProfile from "../pages/MasterDashboard/Profile/MasterProfile";
-import JanjiTemuAdmin from '../pages/AdminDashboard/JanjiTemu/JanjiTemuAdmin';
-import MahasiswaPengajuJanjiTemu from '../pages/AdminDashboard/MahasiswaPengajuJanjiTemu/MahasiswaPengajuJanjiTemu';
-import KalenderJadwalKonseling from '../pages/AdminDashboard/Konseling/KalenderJadwalKonseling';
-import KonselingAdmin from '../pages/AdminDashboard/Konseling/KonselingAdmin';
-import AdminProfile from '../pages/AdminDashboard/Profile/AdminProfile';
-import KonselingKonselor from '../pages/KonselorDashboard/Konseling/KonselingKonselor';
-import KalenderJadwalKonselingKonselor from '../pages/KonselorDashboard/Konseling/KalenderJadwalKonselingKonselor';
-import RiwayatKonselingKonselor from '../pages/KonselorDashboard/Konseling/RiwayatKonselingKonselor';
-import DataMahasiswaKonselor from '../pages/KonselorDashboard/MahasiswaData/DataMahasiswaKonselor';
-import KonselorProfile from '../pages/KonselorDashboard/Profile/KonselorProfile';
-import CatatanKonselingKonselor from '../pages/KonselorDashboard/CatatanKonseling/AddCatatanKonselingKonselor';
-import DetailCatatanKonselingKonselor from '../pages/KonselorDashboard/CatatanKonseling/DetailCatatanKonselingKonselor';
-import NotFound from '../pages/OtherPage/NotFound';
-import EditCatatanKonselingKonselor from '../pages/KonselorDashboard/CatatanKonseling/EditCatatanKonselingKonselor';
-import AddCatatanKonselingKonselor from '../pages/KonselorDashboard/CatatanKonseling/AddCatatanKonselingKonselor';
-import JanjiTemuKemahasiswaan from '../pages/KemahasiswaanDashboard/JanjiTemu/JanjiTemuKemahasiswaan';
-import KonselingKemahasiswaan from '../pages/KemahasiswaanDashboard/Konseling/KonselingKemahasiswaan';
-import KalenderJadwalKonselingKemahasiswaan from '../pages/KemahasiswaanDashboard/Konseling/KalenderJadwalKonselingKemahasiswaan';
-import KemahasiswaanProfile from '../pages/KemahasiswaanDashboard/Profile/KemahasiswaanProfile';
-import RekamMedis from '../pages/KonselorDashboard/MahasiswaData/RekamMedis';
-import JanjiTemuMahasiswa from '../pages/MahasiswaDashboard/JanjiTemu/JanjiTemuMahasiswa';
-import KonselingMahasiswa from '../pages/MahasiswaDashboard/Konseling/KonselingMahasiswa';
-import RiwayatKonselingMahasiswa from '../pages/MahasiswaDashboard/Konseling/RiwayatKonselingMahasiswa';
-import KalenderJadwalKonselingMahasiswa from '../pages/MahasiswaDashboard/Konseling/KalenderJadwalKonselingMahasiswa';
-import DetailCatatanKonselingMahasiswa from '../pages/MahasiswaDashboard/CatatanKonseling/DetailCatatanKonselingMahasiswa';
-import PengajuanJanjiTemuMahasiswa from '../pages/MahasiswaDashboard/JanjiTemu/PengajuanJanjiTemuMahasiswa';
-import MahasiswaAccount from '../pages/MahasiswaDashboard/Account/MahasiswaAccount';
-import DashboardMahasiswa from '../pages/MahasiswaDashboard/Dashboard/Dashboard';
-import EditMahasiswaProfil from '../pages/MahasiswaDashboard/Dashboard/EditMahasiswaProfil';
+import HomePage from '@/features/homepage/pages/Homepage';
+import NotFound from '@/features/NotFound';
+import SignUp from '@/features/auth/pages/SignUp';
+import SignIn from '@/features/auth/pages/SignIn';
+import OtpVerification from '@/features/auth/pages/OTPVerification';
+import ForgotPassword from '@/features/auth/pages/ForgotPassword';
+import ResetPassword from '@/features/auth/pages/ResetPassword';
+import VerifyEmailPage from '@/features/auth/pages/VerifyEmail';
+import ResendVerificationEmail from '@/features/auth/pages/ResendVerificationEmail';
+import AppLayout from '@/layout/AppLayout';
+import MasterDashboard from '@/features/dashboard/pages/MasterDashboard';
+import MasterJanjiTemu from '@/features/janji-temu/pages/MasterJanjiTemu';
+import MasterKonseling from '@/features/konseling/pages/MasterKonseling';
+import MasterKalenderKonseling from '@/features/kalender-konseling/pages/MasterKalenderKonseling';
+import MasterTambahCatatanKonseling from '@/features/catatan-konseling/pages/MasterTambahCatatanKonseling';
+import MasterRiwayatKonseling from '@/features/riwayat-konseling/pages/MasterRiwayatKonseling';
+import MasterDetailCatatanKonseling from '@/features/catatan-konseling/pages/MasterDetailCatatanKonseling';
+import Role from '@/features/role/pages/Role';
+import Permission from '@/features/permission/pages/Permission';
+import RolePermission from '@/features/role-permission/pages/RolePermission';
+import MasterEditCatatanKonseling from '@/features/catatan-konseling/pages/MasterEditCatatanKonseling';
+import Department from '@/features/departement/pages/Departement';
+import ProgramStudi from '@/features/program-studi/pages/ProgramStudi';
+import Mahasiswa from '@/features/user-management/mahasiswa/pages/UserMahasiswa';
+import Admin from '@/features/user-management/admin/pages/UserAdmin';
+import Konselor from '@/features/user-management/konselor/pages/UserKonselor';
+import Kemahasiswaan from '@/features/user-management/kemahasiswaan/pages/UserKemahasiswaan';
+import AdminDashboard from '@/features/dashboard/pages/AdminDashboard';
+import AdminManajemenJanjiTemu from '@/features/janji-temu/pages/AdminManajemenJanjiTemu';
+import AdminManajemenKonseling from '@/features/konseling/pages/AdminManajemenKonseling';
+import AdminKalenderKonseling from '@/features/kalender-konseling/pages/AdminKalenderKonseling';
+import AdminListMahasiswaPengajuJanjiTemu from '@/features/mahasiswa-pengaju-janji-temu/pages/AdminListMahasiswaPengajuJanjiTemu';
+import AdminProfil from '@/features/profil-akun/pages/AdminProfil';
+import MasterProfil from '@/features/profil-akun/pages/MasterProfil';
+import KonselorDashboard from '@/features/dashboard/pages/KonselorDashboard';
+import KonselorKonseling from '@/features/konseling/pages/KonselorKonseling';
+import KonselorKalenderKonseling from '@/features/kalender-konseling/pages/KonselorKalenderKonseling';
+import KonselorTambahCatatanKonseling from '@/features/catatan-konseling/pages/KonselorTambahCatatanKonseling';
+import KonselorRiwayatKonseling from '@/features/riwayat-konseling/pages/KonselorRiwayatKonseling';
+import KonselorDetailCatatanKonseling from '@/features/catatan-konseling/pages/KonselorDetailCatatanKonseling';
+import KonselorEditCatatanKonseling from '@/features/catatan-konseling/pages/KonselorEditCatatanKonseling';
+import KonselorListMahasiswaKonseling from '@/features/rekam-medis/pages/KonselorListMahasiswaKonseling';
+import RekamMedisDetail from '@/features/rekam-medis/pages/KonselorRekamMedisDetail';
+import KonselorProfil from '@/features/profil-akun/pages/KonselorProfil';
+import KemahasiswaanDashboard from '@/features/dashboard/pages/KemahasiswaanDashboard';
+import KemahasiswaanJanjiTemuList from '@/features/janji-temu/pages/KemahasiswaanJanjiTemuList';
+import KemahasiswaanKonselingList from '@/features/konseling/pages/KemahasiswaanKonselingList';
+import KemahasiswaanKalenderKonseling from '@/features/kalender-konseling/pages/KemahasiswaanKalenderKonseling';
+import KemahasiswaanProfil from '@/features/profil-akun/pages/KemahasiswaanProfil';
+import MahasiswaEditProfil from '@/features/profil-akun/pages/MahasiswaEditProfil';
+import MahasiswaJanjiTemu from '@/features/janji-temu/pages/MahasiswaJanjiTemu';
+import PengajuanJanjiTemu from '@/features/janji-temu/pages/PengajuanJanjiTemu';
+import MahasiswaKonseling from '@/features/konseling/pages/MahasiswaKonseling';
+import MahasiswaKalenderKonseling from '@/features/kalender-konseling/pages/MahasiswaKalenderKonseling';
+import MahasiswaRiwayatKonseling from '@/features/riwayat-konseling/pages/MahasiswaRiwayatKonseling';
+import MahasiswaDetailCatatanKonseling from '@/features/catatan-konseling/pages/MahasiswaDetailCatatanKonseling';
+import MahasiswaAkun from '@/features/profil-akun/pages/MahasiswaAkun';
+import MahasiswaProfil from '@/features/profil-akun/pages/MahasiswaProfil';
+import AdminRiwayatKonseling from '@/features/riwayat-konseling/pages/AdminRiwayatKonseling';
 
 const router = createBrowserRouter([
-    { path: '/', element: <Homepage /> },
+    { path: '/', element: <HomePage /> },
     { path: '/not-found', element: <NotFound /> },
     { path: 'signup', element: <SignUp /> },
     { path: 'signin', element: <SignIn /> },
@@ -66,7 +70,6 @@ const router = createBrowserRouter([
     { path: 'reset-password', element: <ResetPassword /> },
     { path: 'verify-email', element: <VerifyEmailPage /> },
     { path: 'resend-verification-email', element: <ResendVerificationEmail /> },
-
     {
         path: 'master-dashboard',
         element: (
@@ -75,14 +78,14 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <Dashboard /> },
-            { path: 'janji-temu', element: <JanjiTemu /> },
-            { path: 'konseling', element: <Konseling /> },
-            { path: 'jadwal-konseling', element: <Calendar /> },
-            { path: 'konseling/:konselingId/catatan', element: <CatatanKonseling /> },
-            { path: 'riwayat-konseling', element: <RiwayatKonseling /> },
-            { path: 'catatan-konseling/:id', element: <DetailCatatanKonseling /> },
-            { path: 'konseling/:konselingId/catatan/:catatanKonselingId', element: <CatatanKonseling /> },
+            { index: true, element: <MasterDashboard /> },
+            { path: 'janji-temu', element: <MasterJanjiTemu /> },
+            { path: 'konseling', element: <MasterKonseling /> },
+            { path: 'jadwal-konseling', element: <MasterKalenderKonseling /> },
+            { path: 'konseling/:konselingId/catatan', element: <MasterTambahCatatanKonseling /> },
+            { path: 'riwayat-konseling', element: <MasterRiwayatKonseling /> },
+            { path: 'catatan-konseling/:id', element: <MasterDetailCatatanKonseling /> },
+            { path: 'catatan-konseling/:id/edit', element: <MasterEditCatatanKonseling /> },
             { path: 'role', element: <Role /> },
             { path: 'permission', element: <Permission /> },
             { path: 'role-permission', element: <RolePermission /> },
@@ -92,7 +95,7 @@ const router = createBrowserRouter([
             { path: 'user/admin', element: <Admin /> },
             { path: 'user/konselor', element: <Konselor /> },
             { path: 'user/kemahasiswaan', element: <Kemahasiswaan /> },
-            { path: 'profile', element: <MasterProfile /> }
+            { path: 'profile', element: <MasterProfil /> }
         ]
     },
     {
@@ -103,13 +106,14 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <Dashboard /> },
-            { path: 'janji-temu', element: <JanjiTemuAdmin /> },
-            { path: 'konseling', element: <KonselingAdmin /> },
-            { path: 'jadwal-konseling', element: <KalenderJadwalKonseling /> },
-            { path: 'mahasiswa', element: <MahasiswaPengajuJanjiTemu /> },
+            { index: true, element: <AdminDashboard /> },
+            { path: 'janji-temu', element: <AdminManajemenJanjiTemu /> },
+            { path: 'konseling', element: <AdminManajemenKonseling /> },
+            { path: 'jadwal-konseling', element: <AdminKalenderKonseling /> },
+            { path: 'riwayat-konseling', element: <AdminRiwayatKonseling /> },
+            { path: 'mahasiswa', element: <AdminListMahasiswaPengajuJanjiTemu /> },
             { path: 'konselor', element: <Konselor /> },
-            { path: 'profile', element: <AdminProfile /> }
+            { path: 'profile', element: <AdminProfil /> }
         ]
     },
     {
@@ -120,16 +124,16 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <Dashboard /> },
-            { path: 'konseling', element: <KonselingKonselor /> },
-            { path: 'jadwal-konseling', element: <KalenderJadwalKonselingKonselor /> },
-            { path: 'konseling/:konselingId/catatan', element: <AddCatatanKonselingKonselor /> },
-            { path: 'riwayat-konseling', element: <RiwayatKonselingKonselor /> },
-            { path: 'catatan-konseling/:id', element: <DetailCatatanKonselingKonselor /> },
-            { path: 'konseling/:konselingId/catatan/:catatanKonselingId', element: <EditCatatanKonselingKonselor /> },
-            { path: 'mahasiswa', element: <DataMahasiswaKonselor /> },
-            { path: 'mahasiswa/:nrp/rekam-medis', element: <RekamMedis /> },
-            { path: 'profile', element: <KonselorProfile /> }
+            { index: true, element: <KonselorDashboard /> },
+            { path: 'konseling', element: <KonselorKonseling /> },
+            { path: 'jadwal-konseling', element: <KonselorKalenderKonseling /> },
+            { path: 'konseling/:konselingId/catatan', element: <KonselorTambahCatatanKonseling /> },
+            { path: 'riwayat-konseling', element: <KonselorRiwayatKonseling /> },
+            { path: 'catatan-konseling/:id', element: <KonselorDetailCatatanKonseling /> },
+            { path: 'catatan-konseling/:id/edit', element: <KonselorEditCatatanKonseling /> },
+            { path: 'mahasiswa', element: <KonselorListMahasiswaKonseling /> },
+            { path: 'mahasiswa/:nrp/rekam-medis', element: <RekamMedisDetail /> },
+            { path: 'profile', element: <KonselorProfil /> }
         ]
     },
     {
@@ -140,13 +144,13 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <Dashboard /> },
-            { path: 'janji-temu', element: <JanjiTemuKemahasiswaan /> },
-            { path: 'konseling', element: <KonselingKemahasiswaan /> },
-            { path: 'jadwal-konseling', element: <KalenderJadwalKonselingKemahasiswaan /> },
+            { index: true, element: <KemahasiswaanDashboard /> },
+            { path: 'janji-temu', element: <KemahasiswaanJanjiTemuList /> },
+            { path: 'konseling', element: <KemahasiswaanKonselingList /> },
+            { path: 'jadwal-konseling', element: <KemahasiswaanKalenderKonseling /> },
             { path: 'mahasiswa', element: <Mahasiswa /> },
             { path: 'user/admin', element: <Admin /> },
-            { path: 'profile', element: <KemahasiswaanProfile /> }
+            { path: 'profile', element: <KemahasiswaanProfil /> }
         ]
     },
     {
@@ -157,15 +161,15 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <DashboardMahasiswa /> },
-            { path: 'mahasiswa/:id/edit', element: <EditMahasiswaProfil /> },
-            { path: 'janji-temu', element: <JanjiTemuMahasiswa /> },
-            { path: 'janji-temu/new', element: <PengajuanJanjiTemuMahasiswa /> },
-            { path: 'konseling', element: <KonselingMahasiswa /> },
-            { path: 'jadwal-konseling', element: <KalenderJadwalKonselingMahasiswa /> },
-            { path: 'riwayat-konseling', element: <RiwayatKonselingMahasiswa /> },
-            { path: 'catatan-konseling/:id', element: <DetailCatatanKonselingMahasiswa/> },
-            { path: 'setting/account', element: <MahasiswaAccount /> },
+            { index: true, element: <MahasiswaProfil /> },
+            { path: 'mahasiswa/:id/edit', element: <MahasiswaEditProfil /> },
+            { path: 'janji-temu', element: <MahasiswaJanjiTemu /> },
+            { path: 'janji-temu/new', element: <PengajuanJanjiTemu /> },
+            { path: 'konseling', element: <MahasiswaKonseling /> },
+            { path: 'jadwal-konseling', element: <MahasiswaKalenderKonseling /> },
+            { path: 'riwayat-konseling', element: <MahasiswaRiwayatKonseling /> },
+            { path: 'catatan-konseling/:id', element: <MahasiswaDetailCatatanKonseling/> },
+            { path: 'setting/account', element: <MahasiswaAkun /> },
         ]
     }
 ]);

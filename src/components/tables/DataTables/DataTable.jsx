@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../ui/table";
+import React, { useState, useMemo } from "react";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import SearchInput from "./SearchInput";
 import LimitSelector from "./LimitSelector";
 import Pagination from "./Pagination";
 import { filterData, sortData, paginateData, getNestedValue } from "./helpers";
+import DataExporter from "./DataExporter";
 
 const DataTable = ({
   data = [],
@@ -11,12 +12,13 @@ const DataTable = ({
   defaultSort = { key: "", direction: "asc" },
   searchable = true,
   pagination = true,
-  itemsPerPageOptions = [5, 10, 20, 50],
   defaultItemsPerPage = 5,
   onAddClick,
   addButtonText = "+ Tambah Data",
   addButtonLink,
   addButtonComponent,
+  exportable = true,
+  exportFileName = "data",
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,30 +33,29 @@ const DataTable = ({
     setSortConfig({ key, direction });
   };
 
-  const processedData = useMemo(() => {
-    let filteredData = data;
-
+  // Get filtered data (all data, not just current page)
+  const filteredData = useMemo(() => {
+    let result = data;
     if (searchTerm && searchable) {
-      filteredData = filterData(filteredData, searchTerm);
+      result = filterData(result, searchTerm);
     }
-
     if (sortConfig?.key) {
-      filteredData = sortData(filteredData, sortConfig);
+      result = sortData(result, sortConfig);
     }
+    return result;
+  }, [data, searchTerm, sortConfig, searchable]);
 
+  // Processed data for display (paginated)
+  const processedData = useMemo(() => {
     if (pagination) {
       return paginateData(filteredData, currentPage, itemsPerPage);
     }
-
     return filteredData;
-  }, [data, searchTerm, sortConfig, currentPage, itemsPerPage, searchable, pagination]);
+  }, [filteredData, currentPage, itemsPerPage, pagination]);
 
   const totalItems = useMemo(() => {
-    if (searchTerm && searchable) {
-      return filterData(data, searchTerm).length;
-    }
-    return data.length;
-  }, [data, searchTerm, searchable]);
+    return filteredData.length;
+  }, [filteredData]);
 
   const renderCellContent = (item, column) => {
     if (column.render) return column.render(item);
@@ -65,15 +66,15 @@ const DataTable = ({
     <div className="space-y-4">
       {/* Search dan Limit */}
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-center">
-        <div className="w-full sm:w-auto">
+        <div className="w-full sm:w-auto flex gap-2">
           {pagination && (
             <LimitSelector
               itemsPerPage={itemsPerPage}
               onChange={(value) => {
-                setItemsPerPage(Number(value));
+                const val = Math.max(1, Math.min(Number(value), 100));
+                setItemsPerPage(val);
                 setCurrentPage(1);
               }}
-              options={itemsPerPageOptions}
             />
           )}
         </div>
@@ -97,6 +98,17 @@ const DataTable = ({
             </button>
           ) : null}
 
+          {exportable && (
+            <div className="relative">
+              <DataExporter
+                data={filteredData}
+                columns={columns}
+                fileName={exportFileName}
+                renderCellContent={renderCellContent}
+              />
+            </div>
+          )}
+
           {searchable && (
             <SearchInput
               value={searchTerm}
@@ -107,9 +119,7 @@ const DataTable = ({
             />
           )}
         </div>
-
       </div>
-
 
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-gray-800">

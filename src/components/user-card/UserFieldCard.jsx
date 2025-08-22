@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import Input from "../form/input/InputField";
-import Label from "../form/Label";
-import Button from "../ui/button/Button";
-import api from "../../api/api";
+import Input from "@/components/form/input/InputField";
+import Label from "@/components/form/Label";
+import Button from "@/components/ui/button/Button";
+import api from "@/api/api";
 import Swal from "sweetalert2";
 
 export default function UserFieldCard({
