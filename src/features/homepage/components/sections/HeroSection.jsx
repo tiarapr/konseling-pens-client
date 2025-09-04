@@ -9,7 +9,7 @@ export default function HeroSection() {
                 <div className="flex flex-col-reverse lg:flex-row items-center px-4 md:px-16 gap-12">
                     <div className="lg:w-1/2 mt-8">
                         <h1 className="text-brand-500 text-title-md lg:text-title-md font-bold mb-6 leading-tight">
-                            Test front-end
+                            Kami siap mendengarkan ceritamu.
                         </h1>
                         <p className="text-gray-500 text-theme-lg mb-6 max-w-xl">
                             Ceritakan kepada kami dan dapatkan bimbingan serta dukungan profesional melalui layanan konseling online maupun offline yang mudah diakses dan nyaman. Kami siap membantu Anda dalam menghadapi tantangan akademik, pribadi, maupun karir.
