@@ -23,7 +23,7 @@ export default function MasterRiwayatKonseling() {
 
             // Filter untuk hanya menampilkan status dijadwalkan, dijadwalkan ulang, atau berlangsung
             const filteredKonseling = konseling.filter((item) => {
-                const validStatuses = ["selesai", "dibatalkan"];
+                const validStatuses = ["selesai", "dibatalkan", "dibatalkan otomatis"];
                 return validStatuses.includes(item.status.name.toLowerCase());
             });
 
